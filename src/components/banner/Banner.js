@@ -10,7 +10,6 @@ const Banner = () => {
   );
 
   const movies = data?.results || [];
-  console.log(movies);
   return (
     <section className="banner page-container mb-20 overflow-hidden h-[500px]">
       <Swiper grabCursor={"true"} slidesPerView={"auto"}>

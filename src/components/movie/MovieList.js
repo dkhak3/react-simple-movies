@@ -5,9 +5,9 @@ import useSWR from "swr";
 import { fetcher } from "../../config";
 // https://api.themoviedb.org/3/movie/now_playing?api_key=3238cac8a852278ff6dd73e5ff77031e
 
-const MovieList = ({ type = "now_playing" }) => {
+const MovieList = ({ type = "movie/now_playing" }) => {
   const { data } = useSWR(
-    `https://api.themoviedb.org/3/movie/${type}?api_key=3238cac8a852278ff6dd73e5ff77031e`,
+    `https://api.themoviedb.org/3/${type}?api_key=3238cac8a852278ff6dd73e5ff77031e`,
     fetcher
   );
 
