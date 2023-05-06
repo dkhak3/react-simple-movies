@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { SwiperSlide, Swiper } from "swiper/react";
 import useSWR from "swr";
 import { fetcher } from "../../config";
+import { useNavigate } from "react-router-dom";
 
 const Banner = () => {
   const { data } = useSWR(
@@ -25,7 +26,9 @@ const Banner = () => {
 };
 
 function BannerItem({ item }) {
-  const { title, backdrop_path } = item;
+  const { title, backdrop_path, id } = item;
+  const navigate = useNavigate();
+
   return (
     <div className="w-full h-full rounded-lg relative">
       <div className="overlay absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.5)] to-[rgba(0,0,0,0.5)] rounded-lg"></div>
@@ -37,21 +40,39 @@ function BannerItem({ item }) {
       <div className="absolute left-5 bottom-5 w-full text-white">
         <h2 className="font-bold text-3xl mb-5">{title}</h2>
         <div className="flex items-center gap-x-3 mb-8">
-          <span className="py-2 px-4 border border-white rounded-lg">
-            Adventure
-          </span>
-          <span className="py-2 px-4 border border-white rounded-lg">
-            Adventure
-          </span>
-          <span className="py-2 px-4 border border-white rounded-lg">
-            Adventure
-          </span>
+          <GetGenres id={id}></GetGenres>
         </div>
-        <button className="py-3 px-6 rounded-lg bg-primary text-white font-medium">
+        <button
+          onClick={() => navigate(`/movie/${id}`)}
+          className="py-3 px-6 rounded-lg bg-primary text-white font-medium"
+        >
           Watch now
         </button>
       </div>
     </div>
+  );
+}
+
+function GetGenres({ id }) {
+  const { data } = useSWR(
+    `https://api.themoviedb.org/3/movie/${id}?api_key=3238cac8a852278ff6dd73e5ff77031e`,
+    fetcher
+  );
+
+  if (!data) return null;
+  const { genres } = data;
+  if (!genres || genres.length <= 0) return null;
+  return (
+    <Fragment>
+      {genres.map((item) => (
+        <span
+          className="py-2 px-4 border border-white rounded-lg"
+          key={item.id}
+        >
+          {item.name}
+        </span>
+      ))}
+    </Fragment>
   );
 }
 
