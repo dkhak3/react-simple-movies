@@ -7,10 +7,12 @@ module.exports = {
         body: ["DM Sans", "sans-serif"],
       },
       colors: {
-        primary: "#F62682",
-        secondary: "#6F5CF1"
+        primary: "#7D6AFF",
+        secondary: "#F62682",
       },
     },
   },
   plugins: [],
 };
+
+// F62682

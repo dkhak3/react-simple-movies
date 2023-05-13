@@ -19,10 +19,68 @@
     height: auto;
   }
   .cast-list .swiper-slide {
-    width: 300px;
+    // width: 300px;
+    width: auto;
     height: auto;
   }
   .banner .swiper {
     height: 100%;
   }
+}
+
+.pagination {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  gap: 20px;
+  .selected {
+    @apply text-primary;
+  }
+}
+
+.skeleton {
+  background-color: #eee;
+  background-image: linear-gradient(
+    110deg,
+    #ececec 8%,
+    #f5f5f5 18%,
+    #ececec 33%
+  );
+  background-size: 200% 100%;
+  animation: 1.5s shine linear infinite;
+}
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+.slick-arrow,
+.slick-prev {
+  display: none !important;
+}
+
+.button-effect:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: auto;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background-color: #fff;
+  opacity: 0.1;
+  z-index: -1;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+.button-effect {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.bg-gradient-secondary {
+  background-image: linear-gradient(to right top, #fc6c8f, #ffb86c);
+}
+.bg-gradient-primary {
+  background-image: linear-gradient(to right top, #6a5af9, #d66efd);
 }
