@@ -7,7 +7,8 @@ import PageNotFound from "./components/layout/PageNotFound";
 import { ScrollToTop } from "./components/scrollToTop/ScrollToTop";
 import Footer from "./components/layout/Footer";
 import Signup from "./components/accounts/signup/Signup";
-import Login from "./components/accounts/login/Login";
+import SignIn from "./components/accounts/login/SignIn";
+import Profile from "./components/accounts/profile/Profile";
 // import HomePage from "./pages/HomePage";
 // import MoviePage from "./pages/MoviePage";
 // import MovieDetailsPage from "./pages/MovieDetailsPage";
@@ -54,7 +55,8 @@ function App() {
               }
             ></Route>
             <Route path="/signup" element={<Signup></Signup>}></Route>
-            <Route path="/login" element={<Login></Login>}></Route>
+            <Route path="/login" element={<SignIn></SignIn>}></Route>
+            <Route path="/profile" element={<Profile></Profile>}></Route>
           </Route>
           <Route path="*" element={<PageNotFound></PageNotFound>}></Route>
         </Routes>

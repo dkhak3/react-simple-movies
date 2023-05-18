@@ -3,9 +3,14 @@ import Input from "../../form/Input";
 import { Formik, Form, useField } from "formik";
 import * as yup from "yup";
 
-const Login = () => {
-  // const [showPassword, setShowPassword] = useState(true);
-  // console.log(showPassword);
+const SignIn = () => {
+  const [value, setValue] = useState("");
+  // Info SignIn
+  const account = JSON.parse(localStorage.getItem("account"));
+
+  const login = {
+    ...account,
+  };
 
   return (
     <Formik
@@ -24,11 +29,24 @@ const Login = () => {
           .required("Please enter your password"),
       })}
       onSubmit={(values, { setSubmitting, resetForm }) => {
-        setTimeout(() => {
-          console.log(JSON.stringify(values, null, 2));
+        // setTimeout(() => {
+        //   console.log(JSON.stringify(values, null, 2));
+        //   setSubmitting(false);
+        //   resetForm();
+        // }, 5000);
+        setValue(values);
+
+        if (
+          values.email === account.email &&
+          values.password === account.password
+        ) {
+          localStorage.setItem("login", JSON.stringify(login));
+          alert("Logged in successfully");
           setSubmitting(false);
           resetForm();
-        }, 5000);
+        } else {
+          alert("Login failed");
+        }
       }}
     >
       {(formik) => {
@@ -45,7 +63,6 @@ const Login = () => {
                 ></Input>
 
                 <Input
-                  type="password"
                   name="password"
                   id="password"
                   lable="Password"
@@ -74,4 +91,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default SignIn;

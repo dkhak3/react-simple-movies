@@ -2,6 +2,11 @@ import React, { Fragment } from "react";
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
+  const login = JSON.parse(localStorage.getItem("login"));
+
+  const value = {
+    ...login,
+  };
   return (
     // <header className="header flex items-center justify-center gap-x-5 text-white py-10 mb-5">
     //   <NavLink
@@ -44,6 +49,27 @@ const Header = () => {
             </NavLink>
           </div>
           <div className="flex items-center gap-x-3">
+            {/* {login !== "null" && (
+              <>
+                <NavLink
+                  to="/signup"
+                  className={({ isActive }) => (isActive ? "text-primary" : "")}
+                >
+                  <p className="flex items-center px-6 py-3 text-sm font-medium  rounded-lg">
+                    Sign up
+                  </p>
+                </NavLink>
+                <NavLink
+                  to="/login"
+                  className={({ isActive }) => (isActive ? "text-white" : "")}
+                >
+                  <p className="flex items-center px-6 py-3 text-sm font-medium rounded-lg bg-gradient-secondary button-effect">
+                    Login
+                  </p>
+                </NavLink>
+              </>
+            )} */}
+
             <NavLink
               to="/signup"
               className={({ isActive }) => (isActive ? "text-primary" : "")}
@@ -60,6 +86,17 @@ const Header = () => {
                 Login
               </p>
             </NavLink>
+
+            {/* {login.username && (
+              <NavLink to="/profile" className={``}>
+                <p>
+                  <span>Hello, </span>
+                  <strong className="ml-1 font-bold text-transparent font-secondary bg-clip-text bg-gradient-primary">
+                    {login.username}
+                  </strong>
+                </p>
+              </NavLink>
+            )} */}
           </div>
         </div>
       </div>
