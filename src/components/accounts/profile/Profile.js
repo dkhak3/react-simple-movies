@@ -2,17 +2,11 @@ import React from "react";
 
 const Profile = () => {
   return (
-    <div className="min-h-screen block lg:grid lg:grid-cols-[300px,minmax(0,1fr)]">
+    <div className="min-h-screen block lg:grid lg:grid-cols-[300px,minmax(0,1fr),300px]">
       <div
-        className="relative hidden p-5 border-r border-slate-800 sm:block"
+        className="relative p-5 border-r border-slate-800 block nav-left"
         aria-label="sidebar"
       >
-        <a
-          href="/"
-          className="flex items-center justify-start px-4 mt-5 mb-10 text-sm font-bold gap-x-3"
-        >
-          <span>First movie</span>
-        </a>
         <ul className="flex flex-col gap-y-2">
           <li>
             <a
@@ -25,7 +19,7 @@ const Profile = () => {
                   focusable="false"
                   data-prefix="fas"
                   data-icon="user"
-                  class="svg-inline--fa fa-user "
+                  className="svg-inline--fa fa-user "
                   role="img"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 448 512"
@@ -50,7 +44,7 @@ const Profile = () => {
                   focusable="false"
                   data-prefix="far"
                   data-icon="heart"
-                  class="svg-inline--fa fa-heart "
+                  className="svg-inline--fa fa-heart "
                   role="img"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 512 512"
@@ -70,15 +64,15 @@ const Profile = () => {
               <span className="w-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="w-6 h-6"
+                  className="w-6 h-6"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                   ></path>
                 </svg>
@@ -88,24 +82,185 @@ const Profile = () => {
           </li>
         </ul>
       </div>
-      <div className="relative p-5 lg:p-10">
+      <div className="relative p-5 content">
         <div className="flex flex-col items-start gap-5">
           <h1 className="inline-flex items-center text-3xl font-bold text-white gap-x-3">
             <span>Account</span>
           </h1>
         </div>
         <div>
-          <div className="mt-10">
-            <div className="accout-heading flex py-5 border-b border-slate-800 mb-10">
-              <img
-                src="https://avatars.githubusercontent.com/u/94631848?v=4"
-                alt=""
-                className="w-24 h-24 object-cover rounded-full"
-              />
-              <h1 className="ml-10 inline-flex items-center text-3xl font-bold text-white gap-x-3">
-                <span>duykhadev</span>
-              </h1>
+          <div className="mt-5 accout-heading flex py-5 border-b border-slate-800 mb-5">
+            <img
+              src="https://avatars.githubusercontent.com/u/94631848?v=4"
+              alt=""
+              className="w-24 h-24 object-cover rounded-full"
+            />
+            <h1 className="ml-10 inline-flex items-center text-3xl font-bold text-white gap-x-3">
+              <span>duykhadev</span>
+            </h1>
+          </div>
+
+          <ul className="flex gap-x-5 edit-list">
+            <li className="text-xl cursor-pointer edit-item active">
+              Edit Your Profile
+            </li>
+            <li className="text-xl cursor-pointer edit-item">
+              Change Your Password
+            </li>
+          </ul>
+
+          {/* Form edit */}
+          <div className="mt-1 edit-name flex gap-x-10">
+            <div className="mt-5"></div>
+            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3 mt-5">
+              <label
+                htmlFor="firstname"
+                className="text-base font-semibold cursor-pointer inline-block"
+              >
+                First name
+              </label>
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  id="firstname"
+                  name="firstname"
+                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
+                />
+              </div>
             </div>
+            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3 mt-5">
+              <label
+                htmlFor="lastname"
+                className="text-base font-semibold cursor-pointer inline-block"
+              >
+                Last name
+              </label>
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  id="lastname"
+                  name="lastname"
+                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-1 edit-age-and-gender flex gap-x-10">
+            <div className="mt-5"></div>
+            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
+              <label
+                htmlFor="date"
+                className="text-base font-semibold cursor-pointer inline-block"
+              >
+                Date of Birth
+              </label>
+              <div className="relative w-full">
+                <input
+                  type="date"
+                  id="date"
+                  name="date"
+                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
+              <label
+                htmlFor="gender"
+                className="text-base font-semibold cursor-pointer inline-block"
+              >
+                Gender
+              </label>
+              <div className="relative w-full">
+                <select
+                  id="gender"
+                  class="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
+                >
+                  <option selected>Choose your gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-1 edit-info flex gap-x-10">
+            <div className="mt-5"></div>
+            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
+              <label
+                htmlFor="address"
+                className="text-base font-semibold cursor-pointer inline-block"
+              >
+                Address
+              </label>
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
+              <label
+                htmlFor="city"
+                className="text-base font-semibold cursor-pointer inline-block"
+              >
+                City
+              </label>
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  id="city"
+                  name="city"
+                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-1 edit-contact flex gap-x-10">
+            <div className="mt-5"></div>
+            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
+              <label
+                htmlFor="email"
+                className="text-base font-semibold cursor-pointer inline-block"
+              >
+                Email
+              </label>
+              <div className="relative w-full">
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
+              <label
+                htmlFor="phone"
+                className="text-base font-semibold cursor-pointer inline-block"
+              >
+                Phone
+              </label>
+              <div className="relative w-full">
+                <input
+                  type="number"
+                  id="phone"
+                  name="phone"
+                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-1 flex gap-x-5 ml-10">
+            <button className="px-10 py-3 border rounded-lg">Cancel</button>
+            <button className="px-10 py-3 rounded-lg bg-primary">
+              Save
+            </button>
           </div>
         </div>
       </div>

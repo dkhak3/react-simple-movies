@@ -14,7 +14,7 @@ const MovieDetailsPage = () => {
 
   return (
     <div className="py-10">
-      <div className="w-full h-[600px] relative mb-10">
+      <div className="w-full h-[400px] lg:h-[600px] relative mb-10">
         <div className="overlay absolute inset-0 bg-black bg-opacity-70"></div>
         <div
           className="w-full h-full bg-cover bg-no-repeat"
@@ -25,29 +25,30 @@ const MovieDetailsPage = () => {
       </div>
 
       <div className="page-container mx-auto">
-        <div className="flex mb-10">
-          <div className="h-[400px] max-w-[800px] -mt-[200px] relative z-10 pb-10">
+        <div className="lg:flex mb-10">
+          <div className="h-[400px] lg:w-[800px] -mt-[200px] relative z-10 pb-10">
             <img
               src={tmdbAPI.imageOriginal(poster_path)}
-              className="w-full h-full object-cover rounded-xl"
+              className="lg:w-full h-full object-cover rounded-xl mx-auto"
               alt=""
             />
           </div>
 
-          <div className="flex flex-col -mt-[100px] relative z-10 ml-5 max-w-[1000px]">
+          <div className="flex-col lg:-mt-[100px] relative z-10 ml-5 ">
             <h1 className="text-4xl font-bold text-white mb-5">{title}</h1>
-            {genres.length > 0 && (
-              <div className="flex items-center gap-x-5 mb-5">
+            <div className="genres-list">
+              <Swiper
+                grabCursor={"true"}
+                spaceBetween={20}
+                slidesPerView={"auto"}
+              >
                 {genres.map((item) => (
-                  <span
-                    className="py-2 px-4 border-primary text-primary border rounded"
-                    key={item.id}
-                  >
-                    {item.name}
-                  </span>
+                  <SwiperSlide key={item.id}>
+                    <GenresItem item={item}></GenresItem>
+                  </SwiperSlide>
                 ))}
-              </div>
-            )}
+              </Swiper>
+            </div>
             <p className="leading-relaxed mx-auto">{overview}</p>
           </div>
         </div>
@@ -145,10 +146,21 @@ function CreditsItem({ item }) {
     <div className="flex flex-col rounded-lg p-3 bg-slate-800 text-white h-full select-none cast-item">
       <img
         src={tmdbAPI.imageOriginal(profile_path)}
-        className="w-[211px] h-[270px] object-cover rounded-lg"
+        className="lg:w-[211px] h-[270px] object-cover rounded-lg"
         alt={name}
       />
       <h3 className="text-xl font-medium">{name}</h3>
+    </div>
+  );
+}
+
+function GenresItem({ item }) {
+  const { name } = item;
+  return (
+    <div className="flex items-center gap-x-5 mb-5 genre-item">
+      <span className="py-2 px-4 border-primary text-primary border rounded">
+        {name}
+      </span>
     </div>
   );
 }

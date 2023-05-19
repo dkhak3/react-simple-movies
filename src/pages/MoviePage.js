@@ -7,6 +7,7 @@ import ReactPaginate from "react-paginate";
 import { v4 } from "uuid";
 import Button from "../components/button/Button";
 import { ScrollToTop } from "../components/scrollToTop/ScrollToTop";
+import { SwiperSlide, Swiper } from "swiper/react";
 const { useRef } = React;
 
 const itemsPerPage = 20;
@@ -92,26 +93,38 @@ const MoviePage = () => {
         </button>
       </div>
 
-      <div className="flex mb-10 gap-x-5 text-center justify-center">
-        <Button onClick={() => handleClickType("movie/popular")}>
-          Popular
-        </Button>
-        <Button onClick={() => handleClickType("movie/now_playing")}>
-          Now playing
-        </Button>
-        <Button onClick={() => handleClickType("movie/upcoming")}>
-          Up Coming
-        </Button>
-        <Button onClick={() => handleClickType("movie/top_rated")}>
-          Top Rated
-        </Button>
-        <Button onClick={() => handleClickType("trending/movie/day")}>
-          Trending
-        </Button>
+      <div className="type-list flex mb-10 gap-x-5 text-center justify-center">
+        <Swiper grabCursor={"true"} spaceBetween={20} slidesPerView={"auto"}>
+          <SwiperSlide>
+            <Button onClick={() => handleClickType("movie/popular")}>
+              Popular
+            </Button>
+          </SwiperSlide>
+          <SwiperSlide>
+            <Button onClick={() => handleClickType("movie/now_playing")}>
+              Now playing
+            </Button>
+          </SwiperSlide>
+          <SwiperSlide>
+            <Button onClick={() => handleClickType("movie/upcoming")}>
+              Up Coming
+            </Button>
+          </SwiperSlide>
+          <SwiperSlide>
+            <Button onClick={() => handleClickType("movie/top_rated")}>
+              Top Rated
+            </Button>
+          </SwiperSlide>
+          <SwiperSlide>
+            <Button onClick={() => handleClickType("trending/movie/day")}>
+              Trending
+            </Button>
+          </SwiperSlide>
+        </Swiper>
       </div>
 
       {isLoading && (
-        <div className="grid grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 xl:gap-10 md:gap-5">
           {new Array(itemsPerPage).fill(0).map(() => (
             <MovieCardSkeleton key={v4()}></MovieCardSkeleton>
           ))}
@@ -119,7 +132,7 @@ const MoviePage = () => {
       )}
 
       {valueSearch === "" && (
-        <h2 className="text-3xl font-medium mb-10">
+        <h2 className="xl:text-3xl lg:text-3xl md:text-2xl text-xl font-medium mb-10">
           {typeMovie === "movie/popular" ? (
             <strong className="text-primary">
               Popular -{" "}
@@ -158,7 +171,7 @@ const MoviePage = () => {
           </p>
         </h2>
       )}
-      <div className="grid grid-cols-4 gap-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
         {!isLoading &&
           movies.length > 0 &&
           movies.map((item) => (
@@ -171,7 +184,7 @@ const MoviePage = () => {
           breakLabel="..."
           nextLabel="next >"
           onPageChange={handlePageClick}
-          pageRangeDisplayed={5}
+          pageRangeDisplayed={3}
           pageCount={pageCount}
           previousLabel="< previous"
           renderOnZeroPageCount={null}

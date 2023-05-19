@@ -9,6 +9,7 @@ import Footer from "./components/layout/Footer";
 import Signup from "./components/accounts/signup/Signup";
 import SignIn from "./components/accounts/login/SignIn";
 import Profile from "./components/accounts/profile/Profile";
+import Home from "./pages/Home";
 // import HomePage from "./pages/HomePage";
 // import MoviePage from "./pages/MoviePage";
 // import MovieDetailsPage from "./pages/MovieDetailsPage";
@@ -19,6 +20,13 @@ const MoviePage = lazy(() => import("./pages/MoviePage"));
 const MovieDetailsPage = lazy(() => import("./pages/MovieDetailsPage"));
 
 function App() {
+  // return (
+  //   <div>
+  //     <Routes>
+  //       <Route path="/" element={<Home />} />
+  //     </Routes>
+  //   </div>
+  // );
   return (
     <Fragment>
       <Suspense fallback={<></>}>
