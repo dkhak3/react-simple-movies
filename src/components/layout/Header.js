@@ -2,36 +2,20 @@ import React, { Fragment } from "react";
 import { NavLink } from "react-router-dom";
 
 const Header = () => {
-  const login = JSON.parse(localStorage.getItem("login"));
+  const login = JSON.parse(localStorage.getItem("login"))
+    ? JSON.parse(localStorage.getItem("login"))
+    : "";
 
-  const value = {
-    ...login,
-  };
   return (
-    // <header className="header flex items-center justify-center gap-x-5 text-white py-10 mb-5">
-    //   <NavLink
-    //     to="/"
-    //     className={({ isActive }) => (isActive ? "text-primary" : "")}
-    //   >
-    //     Home
-    //   </NavLink>
-    //   <NavLink
-    //     to="movies"
-    //     className={({ isActive }) => (isActive ? "text-primary" : "")}
-    //   >
-    //     Movies
-    //   </NavLink>
-    // </header>
-
     <div className="page-container">
       <div className="py-5 border-b border-slate-800 mb-10">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between ">
           <NavLink
             to="/"
-            className="inline-flex items-center font-bold gap-x-3"
+            className="items-center font-bold gap-x-3 hidden xl:block lg:block md:block"
           >
             <div className="relative"></div>
-            <span>Fast Movie</span>
+            <span className="xl:text-2xl lg:text-2xl">Fast Movie</span>
           </NavLink>
           <div className="flex items-center gap-x-3">
             <NavLink
@@ -49,13 +33,13 @@ const Header = () => {
             </NavLink>
           </div>
           <div className="flex items-center gap-x-3">
-            {/* {login !== "null" && (
+            {login === "" && (
               <>
                 <NavLink
                   to="/signup"
                   className={({ isActive }) => (isActive ? "text-primary" : "")}
                 >
-                  <p className="flex items-center px-6 py-3 text-sm font-medium  rounded-lg">
+                  <p className="flex items-center px-6 py-3 font-medium  rounded-lg text-xs xl:text-sm lg:text-sm">
                     Sign up
                   </p>
                 </NavLink>
@@ -63,14 +47,14 @@ const Header = () => {
                   to="/login"
                   className={({ isActive }) => (isActive ? "text-white" : "")}
                 >
-                  <p className="flex items-center px-6 py-3 text-sm font-medium rounded-lg bg-gradient-secondary button-effect">
+                  <p className="flex items-center px-6 py-3 font-medium rounded-lg bg-gradient-secondary button-effect text-xs xl:text-sm lg:text-sm">
                     Login
                   </p>
                 </NavLink>
               </>
-            )} */}
+            )}
 
-            <NavLink
+            {/* <NavLink
               to="/signup"
               className={({ isActive }) => (isActive ? "text-primary" : "")}
             >
@@ -85,9 +69,9 @@ const Header = () => {
               <p className="flex items-center px-6 py-3 text-sm font-medium rounded-lg bg-gradient-secondary button-effect">
                 Login
               </p>
-            </NavLink>
+            </NavLink> */}
 
-            {/* {login.username && (
+            {login.username && (
               <NavLink to="/profile" className={``}>
                 <p>
                   <span>Hello, </span>
@@ -96,7 +80,7 @@ const Header = () => {
                   </strong>
                 </p>
               </NavLink>
-            )} */}
+            )}
           </div>
         </div>
       </div>

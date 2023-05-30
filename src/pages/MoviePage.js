@@ -1,3 +1,4 @@
+import { ToastContainer, toast } from "react-toastify";
 import React, { useEffect, useState } from "react";
 import { fetcher, tmdbAPI } from "../config";
 import useSWR from "swr";
@@ -33,6 +34,18 @@ const MoviePage = () => {
 
   const { data, error } = useSWR(url, fetcher);
   const isLoading = !data && !error;
+
+  const showToastMessage = (type) => {
+    if (type === 1) {
+      toast.success("Add to Favourite Success !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else if (type === 2) {
+      toast.error("Add to Favourite failed !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
 
   useEffect(() => {
     if (filterDebounce) {
@@ -175,9 +188,10 @@ const MoviePage = () => {
         {!isLoading &&
           movies.length > 0 &&
           movies.map((item) => (
-            <MovieCard key={item.id} item={item}></MovieCard>
+            <MovieCard optionsToast="2" key={item.id} item={item}></MovieCard>
           ))}
       </div>
+      <ToastContainer />
 
       <div className="mt-10">
         <ReactPaginate

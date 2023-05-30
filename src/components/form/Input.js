@@ -1,7 +1,7 @@
 import { useField } from "formik";
 import React, { useState } from "react";
 
-const Input = ({ lable, ...props }) => {
+const Input = ({ value, lable, ...props }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [field, meta] = useField(props);
   return (
@@ -18,8 +18,9 @@ const Input = ({ lable, ...props }) => {
           className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
           {...props}
           {...field}
+          value={value}
         />
-        {props.name === "password" && (
+        {props.id === "password" && (
           <svg
             onClick={() => setShowPassword(!showPassword)}
             xmlns="http://www.w3.org/2000/svg"

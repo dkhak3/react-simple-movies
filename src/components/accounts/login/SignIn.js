@@ -1,7 +1,15 @@
 import React, { Fragment, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Input from "../../form/Input";
 import { Formik, Form, useField } from "formik";
 import * as yup from "yup";
+import { NavLink, Route, Routes } from "react-router-dom";
+import Banner from "../../banner/Banner";
+import HomePage from "../../../pages/HomePage";
+import { ScrollToTop } from "../../scrollToTop/ScrollToTop";
+import Footer from "../../layout/Footer";
+import { routes } from "../../../config";
 
 const SignIn = () => {
   const [value, setValue] = useState("");
@@ -10,6 +18,18 @@ const SignIn = () => {
 
   const login = {
     ...account,
+  };
+
+  const showToastMessage = (type) => {
+    if (type === 1) {
+      toast.success("Logged in successfully !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else if (type === 2) {
+      toast.error("Login failed !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
   };
 
   return (
@@ -41,50 +61,52 @@ const SignIn = () => {
           values.password === account.password
         ) {
           localStorage.setItem("login", JSON.stringify(login));
-          alert("Logged in successfully");
+          showToastMessage(1);
+
           setSubmitting(false);
           resetForm();
+          setTimeout(() => {
+            window.location = routes.home;
+          }, 1000);
         } else {
-          alert("Login failed");
+          showToastMessage(2);
         }
       }}
     >
       {(formik) => {
         return (
-          <div className="page-container">
-            <div className="max-w-2xl py-10 mx-auto rounded-lg border-slate-800">
-              <form onSubmit={formik.handleSubmit} autoComplete="one">
-                <Input
-                  type="email"
-                  name="email"
-                  id="email"
-                  lable="Email"
-                  placeholder="Enter your email"
-                ></Input>
+          <Fragment>
+            <div className="page-container">
+              <div className="max-w-2xl py-10 mx-auto rounded-lg border-slate-800">
+                <form onSubmit={formik.handleSubmit} autoComplete="one">
+                  <Input
+                    type="email"
+                    name="email"
+                    id="email"
+                    lable="Email"
+                    placeholder="Enter your email"
+                  ></Input>
 
-                <Input
-                  name="password"
-                  id="password"
-                  lable="Password"
-                  placeholder="Enter your password"
-                ></Input>
+                  <Input
+                    name="password"
+                    id="password"
+                    lable="Password"
+                    placeholder="Enter your password"
+                  ></Input>
 
-                <button
-                  type="submit"
-                  disabled={formik.isSubmitting}
-                  className={`inline-flex items-center justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-third rounded-lg h-[55px] disabled:cursor-not-allowed w-full text-lg bg-gradient-primary button-effect ${
-                    formik.isSubmitting ? "opacity-50" : ""
-                  }`}
-                >
-                  {formik.isSubmitting ? (
-                    <div className="w-5 h-5 rounded-full border-t-2 border-t-transparent border-2 border-white animate-spin mx-auto"></div>
-                  ) : (
-                    "Login"
-                  )}
-                </button>
-              </form>
+                  <button
+                    type="submit"
+                    onClick={formik.handleSubmit}
+                    // disabled={formik.isSubmitting}
+                    className={`inline-flex items-center justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-third rounded-lg h-[55px] disabled:cursor-not-allowed w-full text-lg bg-gradient-primary button-effect`}
+                  >
+                    Login
+                  </button>
+                  <ToastContainer />
+                </form>
+              </div>
             </div>
-          </div>
+          </Fragment>
         );
       }}
     </Formik>

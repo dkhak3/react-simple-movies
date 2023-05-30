@@ -353,7 +353,7 @@ const Footer = () => {
           </div>
 
           <p className="text-xs text-white">
-            &copy; 2022. Company Name. All rights reserved.
+            &copy; 2023. duykhadev. All rights reserved.
           </p>
         </div>
       </footer>

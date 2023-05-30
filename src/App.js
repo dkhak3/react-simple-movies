@@ -1,4 +1,6 @@
 import { Fragment, lazy, Suspense } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "swiper/scss";
 import { Routes, Route } from "react-router-dom";
 import Main from "./components/layout/Main";
@@ -9,7 +11,8 @@ import Footer from "./components/layout/Footer";
 import Signup from "./components/accounts/signup/Signup";
 import SignIn from "./components/accounts/login/SignIn";
 import Profile from "./components/accounts/profile/Profile";
-import Home from "./pages/Home";
+import Favourite from "./components/accounts/profile/Favourite";
+import MoreMovie from "./components/movie/MoreMovie";
 // import HomePage from "./pages/HomePage";
 // import MoviePage from "./pages/MoviePage";
 // import MovieDetailsPage from "./pages/MovieDetailsPage";
@@ -20,13 +23,6 @@ const MoviePage = lazy(() => import("./pages/MoviePage"));
 const MovieDetailsPage = lazy(() => import("./pages/MovieDetailsPage"));
 
 function App() {
-  // return (
-  //   <div>
-  //     <Routes>
-  //       <Route path="/" element={<Home />} />
-  //     </Routes>
-  //   </div>
-  // );
   return (
     <Fragment>
       <Suspense fallback={<></>}>
@@ -62,9 +58,20 @@ function App() {
                 </>
               }
             ></Route>
+            <Route
+              path="/movies/:movieId"
+              element={
+                <>
+                  <MoreMovie></MoreMovie>
+                  <ScrollToTop></ScrollToTop>
+                  <Footer></Footer>
+                </>
+              }
+            ></Route>
             <Route path="/signup" element={<Signup></Signup>}></Route>
             <Route path="/login" element={<SignIn></SignIn>}></Route>
             <Route path="/profile" element={<Profile></Profile>}></Route>
+            <Route path="/favourite" element={<Favourite></Favourite>}></Route>
           </Route>
           <Route path="*" element={<PageNotFound></PageNotFound>}></Route>
         </Routes>

@@ -5,8 +5,9 @@ import useSWR from "swr";
 import { fetcher, tmdbAPI } from "../../config";
 import PropTypes from "prop-types";
 import { withErrorBoundary } from "react-error-boundary";
+import { ToastContainer, toast } from "react-toastify";
 
-const MovieList = ({ type = "movie/now_playing" }) => {
+const MovieList = ({ type = "movie/now_playing", optionsToast = "1" }) => {
   const { data, error } = useSWR(tmdbAPI.getMovieList(type), fetcher);
   const isLoading = !data && !error;
   const movies = data?.results || [];
@@ -39,11 +40,12 @@ const MovieList = ({ type = "movie/now_playing" }) => {
           {movies.length > 0 &&
             movies.map((item) => (
               <SwiperSlide key={item.id}>
-                <MovieCard item={item}></MovieCard>
+                <MovieCard optionsToast={optionsToast} item={item}></MovieCard>
               </SwiperSlide>
             ))}
         </Swiper>
       )}
+      {optionsToast === "1" && <ToastContainer />}
     </div>
   );
 };

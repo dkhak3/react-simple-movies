@@ -1,22 +1,75 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../button/Button";
-import { tmdbAPI } from "../../config";
+import { apiKey, tmdbAPI } from "../../config";
 import PropTypes from "prop-types";
 import { withErrorBoundary } from "react-error-boundary";
 import LoadingSkeleton from "../loading/LoadingSkeleton";
+import TooltipAdvanced from "../tooltip/TooltipAdvanced";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
-const MovieCard = ({ item }) => {
+const MovieCard = ({ item, options = "1", optionsToast = "2" }) => {
   const { title, vote_average, release_date, poster_path, id } = item;
+
   const navigate = useNavigate();
 
+  const itemRef = useRef();
+
+  const showToastMessage = (type) => {
+    if (type === 1) {
+      toast.success("Add to Favourite Success !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else if (type === 2) {
+      toast.error("Add to Favourite failed !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
+  const handleAddFavourite = async () => {
+    const id = itemRef.current.id;
+    try {
+      await axios
+        .get(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&append_to_response=videos`
+        )
+        .then((res) => {
+          const account = JSON.parse(localStorage.getItem("account"));
+          const favourite = account.favourite_movie.push(res.data);
+
+          const update = { ...account, favourite };
+          showToastMessage(1);
+          return localStorage.setItem("account", JSON.stringify(update));
+        });
+    } catch (error) {
+      showToastMessage(2);
+      console.log(error);
+    }
+  };
+
   return (
-    <div className="movie-card flex flex-col rounded-lg p-3 bg-slate-800 text-white h-full">
+    <div
+      className="movie-card relative flex flex-col rounded-lg p-3 bg-slate-800 text-white h-full"
+      ref={itemRef}
+      id={id}
+    >
       <img
         src={tmdbAPI.imageOriginal(poster_path)}
         alt=""
         className="w-full h-[250px] object-cover rounded-lg mb-5"
       />
+
+      {options === "1" && (
+        <button
+          onClick={handleAddFavourite}
+          className="absolute right-5 top-5 rounded-lg bg-[rgba(0,0,0,0.5)] text-white mx-auto"
+        >
+          <TooltipAdvanced>Add to Favorite</TooltipAdvanced>
+        </button>
+      )}
+
       <div className="flex flex-col flex-1">
         <h3 className="text-xl font-bold mb-3">{title}</h3>
         <div className="flex items-center justify-between text-sm mb-10">
@@ -48,6 +101,7 @@ const MovieCard = ({ item }) => {
           Watch now
         </Button>
       </div>
+      <>{optionsToast === "2" && <ToastContainer />}</>
     </div>
   );
 };

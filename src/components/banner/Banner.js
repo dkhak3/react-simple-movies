@@ -1,10 +1,13 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useRef } from "react";
 import { SwiperSlide, Swiper } from "swiper/react";
 import useSWR from "swr";
-import { fetcher, tmdbAPI } from "../../config";
+import { apiKey, fetcher, tmdbAPI } from "../../config";
 import { useNavigate } from "react-router-dom";
 import Button from "../button/Button";
 import SlickMovie from "../slickMovie/SlickMovie";
+import TooltipAdvanced from "../tooltip/TooltipAdvanced";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
 const Banner = () => {
   const { data } = useSWR(
@@ -29,8 +32,47 @@ function BannerItem({ item }) {
   const { title, backdrop_path, id } = item;
   const navigate = useNavigate();
 
+  const itemRef = useRef();
+
+  const showToastMessage = (type) => {
+    if (type === 1) {
+      toast.success("Add to Favourite Success !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else if (type === 2) {
+      toast.error("Add to Favourite failed !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
+  const handleAddFavourite = async () => {
+    const id = itemRef.current.id;
+    try {
+      await axios
+        .get(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&append_to_response=videos`
+        )
+        .then((res) => {
+          const account = JSON.parse(localStorage.getItem("account"));
+
+          const favourite = account.favourite_movie.push(res.data);
+          const update = { ...account, favourite };
+          showToastMessage(1);
+          return localStorage.setItem("account", JSON.stringify(update));
+        });
+    } catch (error) {
+      showToastMessage(2);
+      console.log(error);
+    }
+  };
+
   return (
-    <section className="banner page-container mb-20 overflow-hidden h-[500px]">
+    <section
+      className="banner page-container mb-20 overflow-hidden h-[500px] relative"
+      ref={itemRef}
+      id={id}
+    >
       <div className="w-full h-full rounded-lg relative">
         <div className="overlay absolute inset-0 bg-gradient-to-t from-[rgba(0,0,0,0.5)] to-[rgba(0,0,0,0.5)] rounded-lg"></div>
         <img
@@ -46,8 +88,17 @@ function BannerItem({ item }) {
           <Button bgColor="primary" onClick={() => navigate(`/movie/${id}`)}>
             Watch now
           </Button>
+          <>
+            <button
+              onClick={handleAddFavourite}
+              className="absolute left-40 rounded-lg border-white bg-[rgba(255,255,255,0.3)] text-white mx-auto"
+            >
+              <TooltipAdvanced>Add to Favorite</TooltipAdvanced>
+            </button>
+          </>
         </div>
       </div>
+      <ToastContainer />
     </section>
   );
 }
@@ -73,13 +124,3 @@ function GetGenres({ id }) {
 }
 
 export default Banner;
-{
-  /* <Swiper grabCursor={"true"} slidesPerView={"auto"}>
-        {movies.length > 0 &&
-          movies.map((item) => (
-            <SwiperSlide key={item.id}>
-              <BannerItem item={item}></BannerItem>
-            </SwiperSlide>
-          ))}
-      </Swiper> */
-}

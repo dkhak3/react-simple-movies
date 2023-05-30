@@ -97,7 +97,22 @@
   background-image: linear-gradient(to right top, #6a5af9, #d66efd);
 }
 
-.edit-item.active {
+.nav-item-edit-profile.active,
+.nav-item-change-pass-word.active {
   border-bottom: 2px solid #7d6aff;
   color: #fff;
+}
+
+// Fade
+.fade-enter .tooltip {
+  opacity: 0;
+}
+.fade-enter-active .tooltip {
+  opacity: 1;
+}
+.fade-exit .tooltip {
+  opacity: 1;
+}
+.fade-exit-active .tooltip {
+  opacity: 0;
 }

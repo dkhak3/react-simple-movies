@@ -1,9 +1,25 @@
 import React, { Fragment, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Input from "../../form/Input";
 import { Formik, Form, useField } from "formik";
 import * as yup from "yup";
+import { Link } from "react-router-dom";
+import { routes } from "../../../config";
 
 const Signup = () => {
+  const showToastMessage = (type) => {
+    if (type === 1) {
+      toast.success("Register in successfully !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else if (type === 2) {
+      toast.error("Login failed !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
   return (
     <Formik
       initialValues={{
@@ -30,8 +46,12 @@ const Signup = () => {
       onSubmit={(values, { setSubmitting, resetForm }) => {
         console.log(JSON.stringify(values, null, 2));
         localStorage.setItem("account", JSON.stringify(values, null, 2));
+        showToastMessage(1);
         setSubmitting(false);
         resetForm();
+        setTimeout(() => {
+          window.location = routes.login;
+        }, 1000);
       }}
     >
       {(formik) => {
@@ -64,6 +84,7 @@ const Signup = () => {
 
                 <button
                   type="submit"
+                  onClick={formik.handleSubmit}
                   disabled={formik.isSubmitting}
                   className={`inline-flex items-center justify-center px-8 py-4 font-sans font-semibold tracking-wide text-white bg-third rounded-lg h-[55px] disabled:cursor-not-allowed w-full text-lg bg-gradient-primary button-effect ${
                     formik.isSubmitting ? "opacity-50" : ""
@@ -75,6 +96,7 @@ const Signup = () => {
                     "Sign up"
                   )}
                 </button>
+                <ToastContainer />
               </form>
             </div>
           </div>

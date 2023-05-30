@@ -1,13 +1,53 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useRef } from "react";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
-import { fetcher, tmdbAPI } from "../config";
+import { apiKey, fetcher, tmdbAPI } from "../config";
 import { SwiperSlide, Swiper } from "swiper/react";
 import MovieCard, { MovieCardSkeleton } from "../components/movie/MovieCard";
+import Button from "../components/button/Button";
+import MoreMovie from "../components/movie/MoreMovie";
+import TooltipAdvanced from "../components/tooltip/TooltipAdvanced";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const { data, error } = useSWR(tmdbAPI.getMovieById(movieId), fetcher);
+
+  const itemRef = useRef();
+
+  const showToastMessage = (type) => {
+    if (type === 1) {
+      toast.success("Add to Favourite Success !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else if (type === 2) {
+      toast.error("Add to Favourite failed !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
+  const handleAddFavourite = async () => {
+    const id = movieId;
+    try {
+      await axios
+        .get(
+          `https://api.themoviedb.org/3/movie/${id}?api_key=${apiKey}&append_to_response=videos`
+        )
+        .then((res) => {
+          const account = JSON.parse(localStorage.getItem("account"));
+          const favourite = account.favourite_movie.push(res.data);
+
+          const update = { ...account, favourite };
+          showToastMessage(1);
+          return localStorage.setItem("account", JSON.stringify(update));
+        });
+    } catch (error) {
+      showToastMessage(2);
+      console.log(error);
+    }
+  };
 
   if (!data) return null;
   const { backdrop_path, poster_path, title, genres, overview } = data;
@@ -29,7 +69,7 @@ const MovieDetailsPage = () => {
           <div className="h-[400px] lg:w-[800px] -mt-[200px] relative z-10 pb-10">
             <img
               src={tmdbAPI.imageOriginal(poster_path)}
-              className="lg:w-full h-full object-cover rounded-xl mx-auto"
+              className="h-full object-cover rounded-xl mx-auto"
               alt=""
             />
           </div>
@@ -50,6 +90,12 @@ const MovieDetailsPage = () => {
               </Swiper>
             </div>
             <p className="leading-relaxed mx-auto">{overview}</p>
+            <button
+              onClick={handleAddFavourite}
+              className="mt-5 rounded-lg bg-[rgba(0,0,0,0.5)] text-white mx-auto"
+            >
+              <TooltipAdvanced>Add to Favorite</TooltipAdvanced>
+            </button>
           </div>
         </div>
 
@@ -57,11 +103,14 @@ const MovieDetailsPage = () => {
         <MovieMeta type="videos"></MovieMeta>
         <MovieMeta type="similar"></MovieMeta>
       </div>
+      <ToastContainer />
     </div>
   );
 };
 
 function MovieMeta({ type = "videos" }) {
+  const navigate = useNavigate();
+
   const { movieId } = useParams();
   const { data, error } = useSWR(tmdbAPI.getMovieMeta(movieId, type), fetcher);
 
@@ -96,7 +145,22 @@ function MovieMeta({ type = "videos" }) {
           <div className="flex flex-col gap-10">
             {results.slice(0, 2).map((item) => (
               <div className="" key={item.id}>
-                <h2 className="text-3xl font-medium mb-10">Trailer</h2>
+                <div className="flex justify-between">
+                  <h2 className="text-3xl font-medium mb-10">Trailer</h2>
+                  {/* <NavLink
+                    to="/viewmore"
+                    className="py-3 px-6 rounded-lg capitalize mt-auto bg-primary mb-10 lg:text-lg xl:text-lg text-sm"
+                  >
+                    See all
+                  </NavLink> */}
+                  <Button
+                    bgColor="primary"
+                    onClick={() => navigate(`/movies/${movieId}`)}
+                  >
+                    Watch more
+                  </Button>
+                  {/* <Button onClick={() => MoreMovie(item.id)}>More</Button> */}
+                </div>
                 <div key={item.id} className="w-full aspect-video">
                   <iframe
                     width="1280"

@@ -1,6 +1,144 @@
-import React from "react";
+import classNames from "classnames/bind";
+import style from "./Account.module.scss";
+import { useRef, useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { apiKey, routes } from "../../../config";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import Input from "../../form/Input";
+import EditPassword from "./EditPassword";
+import EditProfile from "./EditProfile";
 
-const Profile = () => {
+const cx = classNames.bind(style);
+
+function Profile() {
+  // Current Profile
+  const account = JSON.parse(localStorage.getItem("account"));
+
+  // Infomation Account
+  const [avatar, setAvatar] = useState();
+  const [firstName, setFirtName] = useState(account.first_name);
+  const [lastName, setLastName] = useState(account.last_name);
+  const [dateOfBirth, setDateOfBirth] = useState(account.date_of_birth);
+  const [gender, setGender] = useState(account.gender);
+  const [address, setAddress] = useState(account.address);
+  const [city, setCity] = useState(account.city);
+  const [email, setEmail] = useState(account.email);
+  const [contact, setContact] = useState(account.contact);
+  const [password, setPassWord] = useState("");
+  const [newPassword, setNewPassWord] = useState("");
+  const [passwordConfirm, SetPassWordConfirm] = useState("");
+
+  //State
+  // State handle
+  const [editProfile, setEditProfile] = useState(true);
+  const [changePassword, setChangePassword] = useState(false);
+
+  const updateProfile = {
+    ...account,
+    first_name: firstName,
+    last_name: lastName,
+    contact: contact,
+    date_of_birth: dateOfBirth,
+    gender: gender,
+    address: address,
+    city: city,
+    email: email,
+    // password: password,
+  };
+
+  const showToastMessage = (type) => {
+    if (type === 1) {
+      toast.success("Changes Success !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else if (type === 2) {
+      toast.success("Logiout Success !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    } else if (type === 3) {
+      toast.error("Login failed !", {
+        position: toast.POSITION.TOP_RIGHT,
+      });
+    }
+  };
+
+  const handleSaveChange = () => {
+    localStorage.setItem("account", JSON.stringify(updateProfile));
+    localStorage.setItem("login", JSON.stringify(updateProfile));
+    showToastMessage(1);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("login");
+    showToastMessage(2);
+    setTimeout(() => {
+      window.location = routes.home;
+    }, 1000);
+  };
+
+  // HANDLE EDIT INFOMATION ACCOUNT
+
+  const EditAvatar = (e) => {
+    const value = e.target.file;
+    setAvatar(value);
+  };
+
+  const EditFirstName = (e) => {
+    const value = e.target.value;
+    setFirtName(value);
+  };
+
+  const EditLastName = (e) => {
+    const value = e.target.value;
+    setLastName(value);
+  };
+  const EditEmail = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+  };
+
+  const EditDayOfBirth = (e) => {
+    const value = e.target.value;
+    setDateOfBirth(value);
+  };
+
+  const EditGender = (e) => {
+    const value = e.target.value;
+    setGender(value);
+  };
+
+  const EditCity = (e) => {
+    const value = e.target.value;
+    setCity(value);
+  };
+
+  const EditAddress = (e) => {
+    const value = e.target.value;
+    setAddress(value);
+  };
+
+  const EditContact = (e) => {
+    const value = e.target.value;
+    setContact(value);
+  };
+
+  // /////////////////////////
+
+  const openEditProfile = () => {
+    setEditProfile(true);
+    setChangePassword(false);
+  };
+
+  const openChangePassword = () => {
+    setEditProfile(false);
+    setChangePassword(true);
+  };
+
   return (
     <div className="min-h-screen block lg:grid lg:grid-cols-[300px,minmax(0,1fr),300px]">
       <div
@@ -9,58 +147,66 @@ const Profile = () => {
       >
         <ul className="flex flex-col gap-y-2">
           <li>
-            <a
-              href="/"
-              className="flex items-center px-4 py-3 rounded-lg gap-x-3 hover:bg-gray-800 bg-gray-800"
+            <NavLink
+              to="/profile"
+              className={({ isActive }) => (isActive ? "text-primary" : "")}
             >
-              <span className="w-5">
-                <svg
-                  aria-hidden="true"
-                  focusable="false"
-                  data-prefix="fas"
-                  data-icon="user"
-                  className="svg-inline--fa fa-user "
-                  role="img"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 448 512"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
-                  ></path>
-                </svg>
-              </span>
-              <span>Account</span>
-            </a>
-          </li>
-          <li>
-            <a
-              href="/profile/bookmarks"
-              className="flex items-center px-4 py-3 rounded-lg gap-x-3 hover:bg-gray-800 bg-gray-800"
-            >
-              <span className="w-5">
-                <svg
-                  aria-hidden="true"
-                  focusable="false"
-                  data-prefix="far"
-                  data-icon="heart"
-                  className="svg-inline--fa fa-heart "
-                  role="img"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M244 84L255.1 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 0 232.4 0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84C243.1 84 244 84.01 244 84L244 84zM255.1 163.9L210.1 117.1C188.4 96.28 157.6 86.4 127.3 91.44C81.55 99.07 48 138.7 48 185.1V190.9C48 219.1 59.71 246.1 80.34 265.3L256 429.3L431.7 265.3C452.3 246.1 464 219.1 464 190.9V185.1C464 138.7 430.4 99.07 384.7 91.44C354.4 86.4 323.6 96.28 301.9 117.1L255.1 163.9z"
-                  ></path>
-                </svg>
-              </span>
-              <span>Favourite</span>
-            </a>
+              <div className="flex items-center px-4 py-3 rounded-lg gap-x-3 hover:bg-gray-800 bg-gray-800">
+                <span className="w-5">
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    data-prefix="fas"
+                    data-icon="user"
+                    className="svg-inline--fa fa-user "
+                    role="img"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 448 512"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
+                    ></path>
+                  </svg>
+                </span>
+                <span>Account</span>
+              </div>
+            </NavLink>
           </li>
 
           <li>
-            <button className="flex items-center px-4 py-3 bg-gray-800 rounded-lg gap-x-3 font-secondary">
+            <NavLink
+              to="/favourite"
+              className={({ isActive }) => (isActive ? "text-primary" : "")}
+            >
+              <div className="flex items-center px-4 py-3 rounded-lg gap-x-3 hover:bg-gray-800 bg-gray-800">
+                <span className="w-5">
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    data-prefix="far"
+                    data-icon="heart"
+                    className="svg-inline--fa fa-heart "
+                    role="img"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M244 84L255.1 96L267.1 84.02C300.6 51.37 347 36.51 392.6 44.1C461.5 55.58 512 115.2 512 185.1V190.9C512 232.4 494.8 272.1 464.4 300.4L283.7 469.1C276.2 476.1 266.3 480 256 480C245.7 480 235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1 0 232.4 0 190.9V185.1C0 115.2 50.52 55.58 119.4 44.1C164.1 36.51 211.4 51.37 244 84C243.1 84 244 84.01 244 84L244 84zM255.1 163.9L210.1 117.1C188.4 96.28 157.6 86.4 127.3 91.44C81.55 99.07 48 138.7 48 185.1V190.9C48 219.1 59.71 246.1 80.34 265.3L256 429.3L431.7 265.3C452.3 246.1 464 219.1 464 190.9V185.1C464 138.7 430.4 99.07 384.7 91.44C354.4 86.4 323.6 96.28 301.9 117.1L255.1 163.9z"
+                    ></path>
+                  </svg>
+                </span>
+                <span>Favourite</span>
+              </div>
+            </NavLink>
+          </li>
+
+          <li>
+            <button
+              onClick={handleLogout}
+              className="flex items-center px-4 py-3 bg-gray-800 rounded-lg gap-x-3 font-secondary"
+            >
               <span className="w-5">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -82,190 +228,261 @@ const Profile = () => {
           </li>
         </ul>
       </div>
+
       <div className="relative p-5 content">
-        <div className="flex flex-col items-start gap-5">
-          <h1 className="inline-flex items-center text-3xl font-bold text-white gap-x-3">
-            <span>Account</span>
-          </h1>
-        </div>
-        <div>
-          <div className="mt-5 accout-heading flex py-5 border-b border-slate-800 mb-5">
-            <img
-              src="https://avatars.githubusercontent.com/u/94631848?v=4"
-              alt=""
-              className="w-24 h-24 object-cover rounded-full"
-            />
-            <h1 className="ml-10 inline-flex items-center text-3xl font-bold text-white gap-x-3">
-              <span>duykhadev</span>
-            </h1>
-          </div>
-
-          <ul className="flex gap-x-5 edit-list">
-            <li className="text-xl cursor-pointer edit-item active">
-              Edit Your Profile
-            </li>
-            <li className="text-xl cursor-pointer edit-item">
-              Change Your Password
-            </li>
-          </ul>
-
-          {/* Form edit */}
-          <div className="mt-1 edit-name flex gap-x-10">
-            <div className="mt-5"></div>
-            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3 mt-5">
-              <label
-                htmlFor="firstname"
-                className="text-base font-semibold cursor-pointer inline-block"
-              >
-                First name
-              </label>
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  id="firstname"
-                  name="firstname"
-                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
-                />
-              </div>
+        <div className={cx("")}>
+          <div className={cx("heading")}>
+            <div className={cx("avartar")}>
+              <img
+                id="img"
+                className={cx("avatar-img")}
+                alt="avatar"
+                src={
+                  avatar
+                    ? avatar
+                    : "	https://png.pngtree.com/png-clipart/20191121/original/pngtree-user-icon-png-image_5097430.jpg"
+                }
+              />
             </div>
-            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3 mt-5">
-              <label
-                htmlFor="lastname"
-                className="text-base font-semibold cursor-pointer inline-block"
-              >
-                Last name
-              </label>
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  id="lastname"
-                  name="lastname"
-                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
-                />
-              </div>
+            <div className={cx("full-name")}>
+              <h1 className="text-xl font-medium">
+                {account.first_name} {account.last_name}
+              </h1>
             </div>
           </div>
 
-          <div className="mt-1 edit-age-and-gender flex gap-x-10">
-            <div className="mt-5"></div>
-            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
-              <label
-                htmlFor="date"
-                className="text-base font-semibold cursor-pointer inline-block"
-              >
-                Date of Birth
-              </label>
-              <div className="relative w-full">
-                <input
-                  type="date"
-                  id="date"
-                  name="date"
-                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
-              <label
-                htmlFor="gender"
-                className="text-base font-semibold cursor-pointer inline-block"
-              >
-                Gender
-              </label>
-              <div className="relative w-full">
-                <select
-                  id="gender"
-                  class="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
+          <div className={cx("edit-profile")}>
+            <div className={cx("nav-edit")}>
+              <ul className={cx("nav-list")}>
+                <li
+                  className={cx(
+                    "nav-item-edit-profile",
+                    editProfile && "active"
+                  )}
+                  onClick={openEditProfile}
                 >
-                  <option selected>Choose your gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </select>
-              </div>
+                  Edit Your Profile
+                </li>
+                <li
+                  className={cx(
+                    "nav-item-change-pass-word",
+                    changePassword && "active"
+                  )}
+                  onClick={openChangePassword}
+                >
+                  Change Your Password
+                </li>
+              </ul>
             </div>
+
+            {editProfile && (
+              <div>
+                <div className="lg:flex xl:flex justify-between mb-5 gap-x-5">
+                  <div className="w-full mt-5 lg:mt-0 xl:mt-0">
+                    <label
+                      htmlFor="firstName"
+                      className="text-base font-semibold cursor-pointer inline-block"
+                    >
+                      First Name
+                    </label>
+                    <input
+                      id="firstName"
+                      name="firstName"
+                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                      type="text"
+                      value={firstName}
+                      onChange={EditFirstName}
+                    />
+                  </div>
+                  <div className="w-full mt-5 lg:mt-0 xl:mt-0">
+                    <label
+                      htmlFor="lastName"
+                      className="text-base font-semibold cursor-pointer inline-block"
+                    >
+                      Last Name
+                    </label>
+                    <input
+                      id="lastName"
+                      name="lastName"
+                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                      type="text"
+                      value={lastName}
+                      onChange={EditLastName}
+                    />
+                  </div>
+                </div>
+
+                <div className="lg:flex xl:flex justify-between mb-5 gap-x-5">
+                  <div className="w-full mt-5 lg:mt-0 xl:mt-0">
+                    <label
+                      htmlFor="dateOfBirth"
+                      className="text-base font-semibold cursor-pointer inline-block"
+                    >
+                      Date of Birth
+                    </label>
+                    <input
+                      id="dateOfBirth"
+                      name="dateOfBirth"
+                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                      type="date"
+                      value={dateOfBirth}
+                      onChange={EditDayOfBirth}
+                    />
+                  </div>
+                  <div className="w-full mt-5 lg:mt-0 xl:mt-0">
+                    <label
+                      htmlFor="Gender"
+                      className="text-base font-semibold cursor-pointer inline-block"
+                    >
+                      Gender
+                    </label>
+                    <select
+                      id="gender"
+                      name="gender"
+                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                      value={gender}
+                      onChange={EditGender}
+                    >
+                      <option>-- Gender --</option>
+                      <option>Male</option>
+                      <option>FeMale</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="lg:flex xl:flex justify-between mb-5 gap-x-5">
+                  <div className="w-full mt-5 lg:mt-0 xl:mt-0">
+                    <label
+                      htmlFor="address"
+                      className="text-base font-semibold cursor-pointer inline-block"
+                    >
+                      Address
+                    </label>
+                    <input
+                      id="address"
+                      name="address"
+                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                      type="text"
+                      value={address}
+                      onChange={EditAddress}
+                    />
+                  </div>
+
+                  <div className="w-full mt-5 lg:mt-0 xl:mt-0">
+                    <label
+                      htmlFor="city"
+                      className="text-base font-semibold cursor-pointer inline-block"
+                    >
+                      City
+                    </label>
+                    <input
+                      id="city"
+                      name="city"
+                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                      type="text"
+                      value={city}
+                      onChange={EditCity}
+                    />
+                  </div>
+                </div>
+
+                <div className="lg:flex xl:flex justify-between mb-5 gap-x-5">
+                  <div className="w-full mt-5 lg:mt-0 xl:mt-0">
+                    <label
+                      htmlFor="email"
+                      className="text-base font-semibold cursor-pointer inline-block"
+                    >
+                      Email
+                    </label>
+                    <input
+                      id="email"
+                      name="email"
+                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                      type="email"
+                      value={email}
+                      onChange={EditEmail}
+                    />
+                  </div>
+
+                  <div className="w-full mt-5 lg:mt-0 xl:mt-0">
+                    <label
+                      htmlFor="number"
+                      className="text-base font-semibold cursor-pointer inline-block"
+                    >
+                      Contact
+                    </label>
+                    <input
+                      id="number"
+                      name="number"
+                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                      type="number"
+                      value={contact}
+                      onChange={EditContact}
+                    />
+                  </div>
+                </div>
+                {/* <EditProfile></EditProfile> */}
+                <ToastContainer />
+              </div>
+            )}
+
+            {changePassword && (
+              <div className={cx("edit-password")}>
+                {/* <div className={cx("change-password")}>
+                  <label
+                    htmlFor="password"
+                    className="text-base font-semibold cursor-pointer inline-block"
+                  >
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    name="password"
+                    className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                    type="password"
+                    value={password}
+                  />
+                </div>
+
+                <div className={cx("new-password")}>
+                  <label
+                    htmlFor="newPassword"
+                    className="text-base font-semibold cursor-pointer inline-block"
+                  >
+                    New Password
+                  </label>
+                  <input
+                    id="newPassword"
+                    name="newPassword"
+                    className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                    type="password"
+                    value={newPassword}
+                    onChange={EditNewPassword}
+                  />
+                </div> */}
+
+                <div className={cx("change-password")}>
+                  <EditPassword></EditPassword>
+                </div>
+              </div>
+            )}
           </div>
 
-          <div className="mt-1 edit-info flex gap-x-10">
-            <div className="mt-5"></div>
-            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
-              <label
-                htmlFor="address"
-                className="text-base font-semibold cursor-pointer inline-block"
+          {editProfile && (
+            <div className="flex items-center justify-end mt-5 gap-x-5">
+              <button className="py-3 px-6 border rounded-lg">Cancel</button>
+              <button
+                className="py-3 px-6 bg-primary rounded-lg"
+                onClick={handleSaveChange}
               >
-                Address
-              </label>
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
-                />
-              </div>
+                Save Changes
+              </button>
             </div>
-            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
-              <label
-                htmlFor="city"
-                className="text-base font-semibold cursor-pointer inline-block"
-              >
-                City
-              </label>
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  id="city"
-                  name="city"
-                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-1 edit-contact flex gap-x-10">
-            <div className="mt-5"></div>
-            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
-              <label
-                htmlFor="email"
-                className="text-base font-semibold cursor-pointer inline-block"
-              >
-                Email
-              </label>
-              <div className="relative w-full">
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col items-start flex-1 mb-5 gap-y-3">
-              <label
-                htmlFor="phone"
-                className="text-base font-semibold cursor-pointer inline-block"
-              >
-                Phone
-              </label>
-              <div className="relative w-full">
-                <input
-                  type="number"
-                  id="phone"
-                  name="phone"
-                  className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-1 flex gap-x-5 ml-10">
-            <button className="px-10 py-3 border rounded-lg">Cancel</button>
-            <button className="px-10 py-3 rounded-lg bg-primary">
-              Save
-            </button>
-          </div>
+          )}
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Profile;
