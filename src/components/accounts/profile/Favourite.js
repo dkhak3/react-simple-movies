@@ -9,6 +9,7 @@ import Button from "../../button/Button";
 import TooltipAdvanced from "../../tooltip/TooltipAdvanced";
 import { v4 } from "uuid";
 import { toast, ToastContainer } from "react-toastify";
+import { ScrollToTop } from "../../scrollToTop/ScrollToTop";
 
 const cx = classNames.bind(style);
 
@@ -17,20 +18,21 @@ const itemsPerPage = 20;
 function Favourite() {
   const account = JSON.parse(localStorage.getItem("account"));
   const favourite = account.favourite_movie;
+
   const isLoading = !favourite;
 
   const showToastMessage = (type) => {
     if (type === 1) {
-      toast.success("Delete to Favourite Success !", {
+      toast.success("Delete to Favourite success", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else if (type === 2) {
-      toast.error("Delete to Favourite failed !", {
+      toast.error("Delete to Favourite failed", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
     if (type === 3) {
-      toast.success("Logout Success !", {
+      toast.success("Logout success", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
@@ -184,43 +186,8 @@ function Favourite() {
       </div>
 
       <ToastContainer />
+      <ScrollToTop></ScrollToTop>
     </div>
-
-    // <div className={cx("wrapper")}>
-    //   <div className={cx("title")}>
-    //     <h2>Your Favourite</h2>
-    //   </div>
-
-    //   <div className={cx("container")}>
-    //     <ul className={cx("list-fav")}>
-    //       {!currentFavourite
-    //         ? "ADD SOME YOUR FAVOURITE MOVIE LIST"
-    //         : currentFavourite.map((fav, index) => (
-    //             <li className={cx("item-fav")} key={index}>
-    //               <MovieBox
-    //                 id={fav.id}
-    //                 interactive={false}
-    //                 className={cx("favourite-item")}
-    //                 poster={`https://image.tmdb.org/t/p/original${fav.poster_path}`}
-    //               />
-
-    //               <div className={cx("info-movie")}>
-    //                 <h3 className={cx("title-movie")}>{fav.original_title}</h3>
-    //                 <span className={cx("tag-line")}>{fav.tagline}</span>
-    //                 <span className={cx("overview")}>{fav.overview}</span>
-    //               </div>
-
-    //               <button
-    //                 className={cx("delete-btn")}
-    //                 onClick={() => handleDelete(fav.id)}
-    //               >
-    //                 {isMobile ? <FontAwesomeIcon icon={faClose} /> : "Delete"}
-    //               </button>
-    //             </li>
-    //           ))}
-    //     </ul>
-    //   </div>
-    // </div>
   );
 }
 

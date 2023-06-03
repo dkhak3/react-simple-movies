@@ -1,71 +1,244 @@
-import React, { useState } from "react";
-import { HiMenuAlt3 } from "react-icons/hi";
-import { MdOutlineDashboard } from "react-icons/md";
-import { RiSettings4Line } from "react-icons/ri";
-import { TbReportAnalytics } from "react-icons/tb";
-import { AiOutlineUser, AiOutlineHeart } from "react-icons/ai";
-import { FiMessageSquare, FiFolder, FiShoppingCart } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Fragment } from "react";
+import { Disclosure, Menu, Transition } from "@headlessui/react";
+import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { NavLink } from "react-router-dom";
+import Search from "../components/Search/Search";
 
-const Home = () => {
-  const menus = [
-    { name: "dashboard", link: "/", icon: MdOutlineDashboard },
-    { name: "user", link: "/", icon: AiOutlineUser },
-    { name: "messages", link: "/", icon: FiMessageSquare },
-    { name: "analytics", link: "/", icon: TbReportAnalytics, margin: true },
-    { name: "File Manager", link: "/", icon: FiFolder },
-    { name: "Cart", link: "/", icon: FiShoppingCart },
-    { name: "Saved", link: "/", icon: AiOutlineHeart, margin: true },
-    { name: "Setting", link: "/", icon: RiSettings4Line },
-  ];
-  const [open, setOpen] = useState(true);
+const navigation = [
+  { name: "Home", href: "/", current: true },
+  { name: "Movies", href: "/movies", current: false },
+  // { name: "Favourite", href: "/favourite", current: false },
+  // { name: "Calendar", href: "#", current: false },
+];
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
+
+export default function Home() {
+  const login = JSON.parse(localStorage.getItem("login"))
+    ? JSON.parse(localStorage.getItem("login"))
+    : "";
   return (
-    <section className="flex gap-6">
-      <div
-        className={`bg-[#0e0e0e] min-h-screen ${
-          open ? "w-72" : "w-16"
-        } duration-500 text-gray-100 px-4`}
-      >
-        <div className="py-3 flex justify-end">
-          <HiMenuAlt3
-            size={26}
-            className="cursor-pointer"
-            onClick={() => setOpen(!open)}
-          />
-        </div>
-        <div className="mt-4 flex flex-col gap-4 relative">
-          {menus?.map((menu, i) => (
-            <Link
-              to={menu?.link}
-              key={i}
-              className={` ${
-                menu?.margin && "mt-5"
-              } group flex items-center text-sm  gap-3.5 font-medium p-2 hover:bg-gray-800 rounded-md`}
-            >
-              <div>{React.createElement(menu?.icon, { size: "20" })}</div>
-              <h2
-                style={{
-                  transitionDelay: `${i + 3}00ms`,
-                }}
-                className={`whitespace-pre duration-500 ${
-                  !open && "opacity-0 translate-x-28 overflow-hidden"
-                }`}
-              >
-                {menu?.name}
-              </h2>
-              <h2
-                className={`${
-                  open && "hidden"
-                } absolute left-48 bg-white font-semibold whitespace-pre text-gray-900 rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit  `}
-              >
-                {menu?.name}
-              </h2>
-            </Link>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
+    <Disclosure
+      as="nav"
+      className="bg-slate-900 page-container border-b border-slate-800 mb-10"
+    >
+      {({ open }) => (
+        <>
+          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+            <div className="relative flex h-16 items-center justify-between">
+              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
+                {/* Mobile menu button*/}
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                  <span className="sr-only">Open main menu</span>
+                  {open ? (
+                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                  ) : (
+                    <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                  )}
+                </Disclosure.Button>
+              </div>
+              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-between">
+                <div className="flex flex-shrink-0 items-center">
+                  <NavLink
+                    to="/"
+                    className="items-center font-bold gap-x-3 hidden xl:block lg:block md:block mr-4"
+                  >
+                    <div className="relative"></div>
+                    <span className="xl:text-2xl lg:text-2xl">Fast Movie</span>
+                  </NavLink>
+                  <Search></Search>
+                </div>
+                <div className="flex justify-between">
+                  <div className="hidden sm:ml-6 sm:flex">
+                    <div className="flex flex-row space-x-4">
+                      {navigation.map((item) => (
+                        <NavLink
+                          key={item.name}
+                          to={item.href}
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-primary hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium flex items-center"
+                              : "hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium flex items-center"
+                          }
+                        >
+                          {item.name}
+                        </NavLink>
+                      ))}
+                      {login.username && (
+                        <NavLink
+                          to="/favourite"
+                          className={({ isActive }) =>
+                            isActive
+                              ? "text-primary hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium flex items-center"
+                              : "hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium flex items-center"
+                          }
+                        >
+                          Favourite
+                        </NavLink>
+                      )}
+                    </div>
+                    <div className="flex-1 flex">
+                      {login === "" && (
+                        <>
+                          <NavLink
+                            to="/signup"
+                            className={({ isActive }) =>
+                              isActive
+                                ? "text-primary"
+                                : "hover:bg-gray-700 hover:text-white rounded-md text-sm font-medium flex items-center"
+                            }
+                          >
+                            <p className="flex items-center px-6 py-3 font-medium  rounded-lg text-xs xl:text-sm lg:text-sm">
+                              Sign up
+                            </p>
+                          </NavLink>
+                          <NavLink
+                            to="/login"
+                            className={({ isActive }) =>
+                              isActive
+                                ? "text-white"
+                                : "hover:bg-gray-700 hover:text-white rounded-md text-sm font-medium flex items-center"
+                            }
+                          >
+                            <p className="flex items-center px-6 py-3 font-medium rounded-lg bg-gradient-secondary button-effect text-xs xl:text-sm lg:text-sm">
+                              Login
+                            </p>
+                          </NavLink>
+                        </>
+                      )}
+                      {login.username && (
+                        <NavLink
+                          to="/profile"
+                          className={`ml-10 flex items-center`}
+                        >
+                          <p>
+                            <span>Hello, </span>
+                            <strong className="ml-1 font-bold text-transparent font-secondary bg-clip-text bg-gradient-primary">
+                              {login.username}
+                            </strong>
+                          </p>
+                        </NavLink>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-export default Home;
+          <Disclosure.Panel className="sm:hidden">
+            <div className="space-y-1 px-2 pb-3 pt-2">
+              {navigation.map((item) => (
+                <Disclosure.Button
+                  key={item.name}
+                  as="a"
+                  href={item.href}
+                  className={classNames(
+                    item.current
+                      ? "bg-gray-900 text-white"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white",
+                    "block rounded-md px-3 py-2 text-base font-medium"
+                  )}
+                  aria-current={item.current ? "page" : undefined}
+                >
+                  {item.name}
+                </Disclosure.Button>
+              ))}
+              {login.username && (
+                <NavLink
+                  to="/favourite"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-primary hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium flex items-center"
+                      : "hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium flex items-center"
+                  }
+                >
+                  Favourite
+                </NavLink>
+              )}
+              {login === "" && (
+                <>
+                  <NavLink
+                    to="/signup"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-primary"
+                        : "hover:bg-gray-700 hover:text-white rounded-md text-sm font-medium flex items-center"
+                    }
+                  >
+                    <p className="flex items-center px-6 py-3 font-medium  rounded-lg text-xs xl:text-sm lg:text-sm">
+                      Sign up
+                    </p>
+                  </NavLink>
+                  <NavLink
+                    to="/login"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "text-white"
+                        : "hover:bg-gray-700 hover:text-white rounded-md text-sm font-medium flex items-center"
+                    }
+                  >
+                    <p className="flex items-center px-6 py-3 font-medium rounded-lg bg-gradient-secondary button-effect text-xs xl:text-sm lg:text-sm">
+                      Login
+                    </p>
+                  </NavLink>
+                </>
+              )}
+              {login.username && (
+                <NavLink to="/profile" className={`ml-10 flex items-center`}>
+                  <p>
+                    <span>Hello, </span>
+                    <strong className="ml-1 font-bold text-transparent font-secondary bg-clip-text bg-gradient-primary">
+                      {login.username}
+                    </strong>
+                  </p>
+                </NavLink>
+              )}
+            </div>
+          </Disclosure.Panel>
+        </>
+      )}
+    </Disclosure>
+  );
+}
+
+{
+  /* <Menu as="div" className="relative ml-3">
+                  {login === "" && (
+                    <>
+                      <NavLink
+                        to="/signup"
+                        className={({ isActive }) =>
+                          isActive ? "text-primary" : ""
+                        }
+                      >
+                        <p className="flex items-center px-6 py-3 font-medium  rounded-lg text-xs xl:text-sm lg:text-sm">
+                          Sign up
+                        </p>
+                      </NavLink>
+                      <NavLink
+                        to="/login"
+                        className={({ isActive }) =>
+                          isActive ? "text-white" : ""
+                        }
+                      >
+                        <p className="flex items-center px-6 py-3 font-medium rounded-lg bg-gradient-secondary button-effect text-xs xl:text-sm lg:text-sm">
+                          Login
+                        </p>
+                      </NavLink>
+                    </>
+                  )}
+                  {login.username && (
+                    <NavLink to="/profile" className={``}>
+                      <p>
+                        <span>Hello, </span>
+                        <strong className="ml-1 font-bold text-transparent font-secondary bg-clip-text bg-gradient-primary">
+                          {login.username}
+                        </strong>
+                      </p>
+                    </NavLink>
+                  )}
+                </Menu> */
+}

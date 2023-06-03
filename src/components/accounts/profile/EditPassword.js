@@ -11,11 +11,11 @@ const EditPassword = () => {
 
   const showToastMessage = (type) => {
     if (type === 1) {
-      toast.success("Changes Success !", {
+      toast.success("Changes success", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else if (type === 2) {
-      toast.error("Change failed !", {
+      toast.error("Change failed", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }

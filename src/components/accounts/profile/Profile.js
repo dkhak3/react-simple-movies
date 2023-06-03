@@ -10,6 +10,14 @@ import Input from "../../form/Input";
 import EditPassword from "./EditPassword";
 import EditProfile from "./EditProfile";
 
+import { InputText } from "primereact/inputtext";
+import avatar from "./avatar.png";
+import AvatarEditor from "react-avatar-editor";
+
+import { Dialog } from "primereact/dialog";
+import { Button } from "primereact/button";
+import EditEmail from "./EditEmail";
+
 const cx = classNames.bind(style);
 
 function Profile() {
@@ -17,7 +25,7 @@ function Profile() {
   const account = JSON.parse(localStorage.getItem("account"));
 
   // Infomation Account
-  const [avatar, setAvatar] = useState();
+  // const [avatar, setAvatar] = useState();
   const [firstName, setFirtName] = useState(account.first_name);
   const [lastName, setLastName] = useState(account.last_name);
   const [dateOfBirth, setDateOfBirth] = useState(account.date_of_birth);
@@ -26,14 +34,12 @@ function Profile() {
   const [city, setCity] = useState(account.city);
   const [email, setEmail] = useState(account.email);
   const [contact, setContact] = useState(account.contact);
-  const [password, setPassWord] = useState("");
-  const [newPassword, setNewPassWord] = useState("");
-  const [passwordConfirm, SetPassWordConfirm] = useState("");
 
   //State
   // State handle
   const [editProfile, setEditProfile] = useState(true);
   const [changePassword, setChangePassword] = useState(false);
+  const [changeEmail, setChangeEmail] = useState(false);
 
   const updateProfile = {
     ...account,
@@ -45,83 +51,78 @@ function Profile() {
     address: address,
     city: city,
     email: email,
-    // password: password,
+    // sign_in: true,
   };
-
+  const logout = {
+    ...account,
+    sign_in: false,
+  };
   const showToastMessage = (type) => {
     if (type === 1) {
-      toast.success("Changes Success !", {
+      toast.success("Changes success", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else if (type === 2) {
-      toast.success("Logiout Success !", {
+      toast.success("Logout success", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else if (type === 3) {
-      toast.error("Login failed !", {
+      toast.error("Login failed", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
   };
-
   const handleSaveChange = () => {
-    localStorage.setItem("account", JSON.stringify(updateProfile));
-    localStorage.setItem("login", JSON.stringify(updateProfile));
+    localStorage.setItem(
+      "account",
+      JSON.stringify(updateProfile, (account.sign_in = true))
+    );
+    localStorage.setItem(
+      "login",
+      JSON.stringify(updateProfile, (account.sign_in = true))
+    );
     showToastMessage(1);
     setTimeout(() => {
       window.location.reload();
     }, 1000);
   };
-
   const handleLogout = () => {
+    localStorage.setItem("account", JSON.stringify(logout));
     localStorage.removeItem("login");
     showToastMessage(2);
     setTimeout(() => {
       window.location = routes.home;
     }, 1000);
   };
-
   // HANDLE EDIT INFOMATION ACCOUNT
-
-  const EditAvatar = (e) => {
-    const value = e.target.file;
-    setAvatar(value);
-  };
-
+  // const EditAvatar = (e) => {
+  //   const value = e.target.file;
+  //   setAvatar(value);
+  // };
   const EditFirstName = (e) => {
     const value = e.target.value;
     setFirtName(value);
   };
-
   const EditLastName = (e) => {
     const value = e.target.value;
     setLastName(value);
   };
-  const EditEmail = (e) => {
-    const value = e.target.value;
-    setEmail(value);
-  };
-
   const EditDayOfBirth = (e) => {
     const value = e.target.value;
     setDateOfBirth(value);
   };
-
   const EditGender = (e) => {
     const value = e.target.value;
     setGender(value);
   };
-
   const EditCity = (e) => {
     const value = e.target.value;
     setCity(value);
   };
-
   const EditAddress = (e) => {
     const value = e.target.value;
     setAddress(value);
   };
-
   const EditContact = (e) => {
     const value = e.target.value;
     setContact(value);
@@ -132,13 +133,36 @@ function Profile() {
   const openEditProfile = () => {
     setEditProfile(true);
     setChangePassword(false);
+    setChangeEmail(false);
   };
 
   const openChangePassword = () => {
     setEditProfile(false);
     setChangePassword(true);
+    setChangeEmail(false);
+  };
+  const openChangeEmail = () => {
+    setEditProfile(false);
+    setChangePassword(false);
+    setChangeEmail(true);
   };
 
+  const [imageCrop, setImageCrop] = useState(false);
+  const [image, setImage] = useState("");
+  const [src, setSrc] = useState(false);
+  const [profile, setProfile] = useState([]);
+  const [pview, setPview] = useState(false);
+  const profileFinal = profile.map((item) => item.pview);
+  const onClose = () => {
+    setPview(null);
+  };
+  const onCrop = (view) => {
+    setPview(view);
+  };
+  const saveCropImage = () => {
+    setProfile([...profile, { pview }]);
+    setImageCrop(false);
+  };
   return (
     <div className="min-h-screen block lg:grid lg:grid-cols-[300px,minmax(0,1fr),300px]">
       <div
@@ -242,8 +266,53 @@ function Profile() {
                     ? avatar
                     : "	https://png.pngtree.com/png-clipart/20191121/original/pngtree-user-icon-png-image_5097430.jpg"
                 }
+                // onClick={() => setImageCrop(true)}
+                // src={profileFinal.length ? profileFinal : avatar}
               />
+              {/* <Dialog
+                visible={imageCrop}
+                header={() => (
+                  <p htmlFor="" className="text-2xl font-semibold">
+                    Update Avatar
+                  </p>
+                )}
+                onHide={() => setImageCrop(false)}
+              >
+                <div className="confirmation-content flex flex-col items-center">
+                  <AvatarEditor
+                    width={500}
+                    height={400}
+                    onCrop={onCrop}
+                    onClose={onClose}
+                    src={src}
+                    shadingColor={"#474649"}
+                    backgroundColor={"#474649"}
+                  />
+                  <div className="flex flex-col items-center mt-5 w-12">
+                    <div className="flex justify-around w-12 mt-4">
+                      <Button
+                        onClick={saveCropImage}
+                        label="Save"
+                        icon="pi pi-checl"
+                      ></Button>
+                    </div>
+                  </div>
+                </div>
+              </Dialog> */}
             </div>
+            {/* <InputText
+              type="file"
+              accept="/image/*"
+              style={{ display: "none" }}
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file && file.type.substring(0, 5) === "image") {
+                  setImage(file);
+                } else {
+                  setImage(null);
+                }
+              }}
+            ></InputText> */}
             <div className={cx("full-name")}>
               <h1 className="text-xl font-medium">
                 {account.first_name} {account.last_name}
@@ -271,6 +340,15 @@ function Profile() {
                   onClick={openChangePassword}
                 >
                   Change Your Password
+                </li>
+                <li
+                  className={cx(
+                    "nav-item-change-pass-word",
+                    changeEmail && "active"
+                  )}
+                  onClick={openChangeEmail}
+                >
+                  Change Your Email
                 </li>
               </ul>
             </div>
@@ -397,10 +475,10 @@ function Profile() {
                     <input
                       id="email"
                       name="email"
-                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
+                      className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3 cursor-no-drop"
+                      disabled
                       type="email"
                       value={email}
-                      onChange={EditEmail}
                     />
                   </div>
 
@@ -428,41 +506,16 @@ function Profile() {
 
             {changePassword && (
               <div className={cx("edit-password")}>
-                {/* <div className={cx("change-password")}>
-                  <label
-                    htmlFor="password"
-                    className="text-base font-semibold cursor-pointer inline-block"
-                  >
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    name="password"
-                    className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
-                    type="password"
-                    value={password}
-                  />
-                </div>
-
-                <div className={cx("new-password")}>
-                  <label
-                    htmlFor="newPassword"
-                    className="text-base font-semibold cursor-pointer inline-block"
-                  >
-                    New Password
-                  </label>
-                  <input
-                    id="newPassword"
-                    name="newPassword"
-                    className="w-full p-4 text-base text-white transition-all border rounded-lg outline-none bg-slate-900 focus:border-blue-500 border-slate-700 mt-3"
-                    type="password"
-                    value={newPassword}
-                    onChange={EditNewPassword}
-                  />
-                </div> */}
-
                 <div className={cx("change-password")}>
                   <EditPassword></EditPassword>
+                </div>
+              </div>
+            )}
+
+            {changeEmail && (
+              <div className={cx("edit-password")}>
+                <div className={cx("change-password")}>
+                  <EditEmail></EditEmail>
                 </div>
               </div>
             )}

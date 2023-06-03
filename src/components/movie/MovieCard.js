@@ -18,11 +18,11 @@ const MovieCard = ({ item, options = "1", optionsToast = "2" }) => {
 
   const showToastMessage = (type) => {
     if (type === 1) {
-      toast.success("Add to Favourite Success !", {
+      toast.success("Add to Favourite success", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else if (type === 2) {
-      toast.error("Add to Favourite failed !", {
+      toast.error("Sign in to add movies to favourites", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
@@ -37,15 +37,18 @@ const MovieCard = ({ item, options = "1", optionsToast = "2" }) => {
         )
         .then((res) => {
           const account = JSON.parse(localStorage.getItem("account"));
-          const favourite = account.favourite_movie.push(res.data);
 
-          const update = { ...account, favourite };
-          showToastMessage(1);
-          return localStorage.setItem("account", JSON.stringify(update));
+          if (account.sign_in) {
+            let favourite = account.favourite_movie.push(res.data);
+
+            const update = { ...account, favourite };
+            showToastMessage(1);
+            return localStorage.setItem("account", JSON.stringify(update));
+          }
+          showToastMessage(2);
         });
     } catch (error) {
       showToastMessage(2);
-      console.log(error);
     }
   };
 

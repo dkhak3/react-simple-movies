@@ -15,18 +15,18 @@ const SignIn = () => {
   const [value, setValue] = useState("");
   // Info SignIn
   const account = JSON.parse(localStorage.getItem("account"));
-
   const login = {
     ...account,
+    sign_in: true,
   };
 
   const showToastMessage = (type) => {
     if (type === 1) {
-      toast.success("Logged in successfully !", {
+      toast.success("Logged in successfully", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else if (type === 2) {
-      toast.error("Login failed !", {
+      toast.error("Login failed", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
@@ -61,6 +61,7 @@ const SignIn = () => {
           values.password === account.password
         ) {
           localStorage.setItem("login", JSON.stringify(login));
+          localStorage.setItem("account", JSON.stringify(login));
           showToastMessage(1);
 
           setSubmitting(false);

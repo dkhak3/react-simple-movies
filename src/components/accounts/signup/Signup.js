@@ -10,11 +10,11 @@ import { routes } from "../../../config";
 const Signup = () => {
   const showToastMessage = (type) => {
     if (type === 1) {
-      toast.success("Register in successfully !", {
+      toast.success("Register in successfully", {
         position: toast.POSITION.TOP_RIGHT,
       });
     } else if (type === 2) {
-      toast.error("Login failed !", {
+      toast.error("Login failed", {
         position: toast.POSITION.TOP_RIGHT,
       });
     }
