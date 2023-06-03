@@ -71,25 +71,34 @@ function Search() {
           <div className={cx("box")} tabIndex="-1" {...attrs} data-tipp>
             <ul className={cx("search-result")}>
               {searchValue.length > 0 &&
-                searchResult.map((item, index) => {
-                  return (
-                    <NavLink
-                      to={`/movie/${item.id}`}
-                      key={index}
-                      className="items-center font-bold gap-x-3 hidden xl:block lg:block md:block"
-                      onClick={() => setSearchValue("")}
-                    >
-                      <li className={cx("search-result-item")}>
-                        <span className={cx("icon")}>
-                          <FontAwesomeIcon icon={faSearch} />
-                        </span>
-                        <span className={cx("search-result-text")}>
-                          {item.original_title}
-                        </span>
-                      </li>
-                    </NavLink>
-                  );
-                })}
+                searchResult.map((item, index) => (
+                  <NavLink
+                    to={`/movie/${item.id}`}
+                    key={index}
+                    className="items-center font-bold gap-x-3 block"
+                    onClick={() => setSearchValue("")}
+                  >
+                    <li className={cx("search-result-item")}>
+                      <span className={cx("icon")}>
+                        <FontAwesomeIcon icon={faSearch} />
+                      </span>
+                      <span className={cx("search-result-text")}>
+                        {item.original_title}
+                      </span>
+                    </li>
+                  </NavLink>
+                ))}
+              {/* {searchValue.length > 0 &&
+                searchResult.map((item, index) => (
+                  <li className={cx("search-result-item")} key={index}>
+                    <span className={cx("icon")}>
+                      <FontAwesomeIcon icon={faSearch} />
+                    </span>
+                    <span className={cx("search-result-text")}>
+                      {item.original_title}
+                    </span>
+                  </li>
+                ))} */}
             </ul>
           </div>
         )}
