@@ -1,18 +1,20 @@
-import React, { useRef } from "react";
+import React, { Fragment, useRef } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 import { apiKey, fetcher, tmdbAPI } from "../config";
 import { SwiperSlide, Swiper } from "swiper/react";
 import MovieCard, { MovieCardSkeleton } from "../components/movie/MovieCard";
 import Button from "../components/button/Button";
-import MoreMovie from "../components/movie/MoreMovie";
+import MoreMovie, { MoreMovieSkeleton } from "../components/movie/MoreMovie";
 import TooltipAdvanced from "../components/tooltip/TooltipAdvanced";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import LoadingSkeleton from "../components/loading/LoadingSkeleton";
 
 const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const { data, error } = useSWR(tmdbAPI.getMovieById(movieId), fetcher);
+  const isLoading = !data && !error;
 
   const itemRef = useRef();
 
@@ -55,56 +57,61 @@ const MovieDetailsPage = () => {
 
   return (
     <div className="py-10">
-      <div className="w-full h-[400px] lg:h-[600px] relative mb-10">
-        <div className="overlay absolute inset-0 bg-black bg-opacity-70"></div>
-        <div
-          className="w-full h-full bg-cover bg-no-repeat"
-          style={{
-            backgroundImage: `url(${tmdbAPI.imageOriginal(backdrop_path)})`,
-          }}
-        ></div>
-      </div>
-
-      <div className="page-container mx-auto">
-        <div className="lg:flex mb-10">
-          <div className="h-[400px] lg:w-[800px] -mt-[200px] relative z-10 pb-10">
-            <img
-              src={tmdbAPI.imageOriginal(poster_path)}
-              className="h-full object-cover rounded-xl mx-auto"
-              alt=""
-            />
+      {isLoading && <MovieDetailsSkeleton></MovieDetailsSkeleton>}
+      {!isLoading && (
+        <Fragment>
+          <div className="w-full h-[400px] lg:h-[600px] relative mb-10">
+            <div className="overlay absolute inset-0 bg-black bg-opacity-70"></div>
+            <div
+              className="w-full h-full bg-cover bg-no-repeat"
+              style={{
+                backgroundImage: `url(${tmdbAPI.imageOriginal(backdrop_path)})`,
+              }}
+            ></div>
           </div>
 
-          <div className="flex-col lg:-mt-[100px] relative z-10 ml-5 ">
-            <h1 className="text-4xl font-bold text-white mb-5">{title}</h1>
-            <div className="genres-list">
-              <Swiper
-                grabCursor={"true"}
-                spaceBetween={20}
-                slidesPerView={"auto"}
-              >
-                {genres.map((item) => (
-                  <SwiperSlide key={item.id}>
-                    <GenresItem item={item}></GenresItem>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+          <div className="page-container mx-auto">
+            <div className="lg:flex mb-10">
+              <div className="h-[400px] lg:w-[800px] -mt-[200px] relative z-10 pb-10">
+                <img
+                  src={tmdbAPI.imageOriginal(poster_path)}
+                  className="h-full object-cover rounded-xl mx-auto"
+                  alt=""
+                />
+              </div>
+
+              <div className="flex-col lg:-mt-[100px] relative z-10 ml-5 ">
+                <h1 className="text-4xl font-bold text-white mb-5">{title}</h1>
+                <div className="genres-list">
+                  <Swiper
+                    grabCursor={"true"}
+                    spaceBetween={20}
+                    slidesPerView={"auto"}
+                  >
+                    {genres.map((item) => (
+                      <SwiperSlide key={item.id}>
+                        <GenresItem item={item}></GenresItem>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+                <p className="leading-relaxed mx-auto">{overview}</p>
+                <button
+                  onClick={handleAddFavourite}
+                  className="mt-5 rounded-lg bg-[rgba(0,0,0,0.5)] text-white mx-auto"
+                >
+                  <TooltipAdvanced>Add to Favorite</TooltipAdvanced>
+                </button>
+              </div>
             </div>
-            <p className="leading-relaxed mx-auto">{overview}</p>
-            <button
-              onClick={handleAddFavourite}
-              className="mt-5 rounded-lg bg-[rgba(0,0,0,0.5)] text-white mx-auto"
-            >
-              <TooltipAdvanced>Add to Favorite</TooltipAdvanced>
-            </button>
-          </div>
-        </div>
 
-        <MovieMeta type="credits"></MovieMeta>
-        <MovieMeta type="videos"></MovieMeta>
-        <MovieMeta type="similar"></MovieMeta>
-      </div>
-      <ToastContainer />
+            <MovieMeta type="credits"></MovieMeta>
+            <MovieMeta type="videos"></MovieMeta>
+            <MovieMeta type="similar"></MovieMeta>
+          </div>
+          <ToastContainer />
+        </Fragment>
+      )}
     </div>
   );
 };
@@ -148,19 +155,12 @@ function MovieMeta({ type = "videos" }) {
               <div className="" key={item.id}>
                 <div className="flex justify-between">
                   <h2 className="text-3xl font-medium mb-10">Trailer</h2>
-                  {/* <NavLink
-                    to="/viewmore"
-                    className="py-3 px-6 rounded-lg capitalize mt-auto bg-primary mb-10 lg:text-lg xl:text-lg text-sm"
-                  >
-                    See all
-                  </NavLink> */}
                   <Button
                     bgColor="primary"
                     onClick={() => navigate(`/movies/${movieId}`)}
                   >
                     Watch more
                   </Button>
-                  {/* <Button onClick={() => MoreMovie(item.id)}>More</Button> */}
                 </div>
                 <div key={item.id} className="w-full aspect-video">
                   <iframe
@@ -230,6 +230,182 @@ function GenresItem({ item }) {
   );
 }
 
+export default MovieDetailsPage;
+
+const MovieDetailsSkeleton = () => {
+  return (
+    <div className="">
+      <div className="w-full h-[400px] lg:h-[600px] relative mb-10">
+        <div className="overlay absolute inset-0 bg-opacity-70"></div>
+        <div className="w-full h-full bg-cover bg-no-repeat">
+          <LoadingSkeleton
+            width="100%"
+            height="100%"
+            radius="8px"
+          ></LoadingSkeleton>
+        </div>
+      </div>
+
+      <div className="page-container mx-auto">
+        <div className="lg:flex mb-10">
+          <div className="h-[400px] lg:w-[280px] -mt-[200px] relative z-10 pb-10">
+            <LoadingSkeleton className="h-full object-cover rounded-xl mx-auto"></LoadingSkeleton>
+          </div>
+
+          <div className="flex-col lg:-mt-[100px] relative z-10 ml-5 ">
+            <h1 className="text-4xl font-bold mb-5">
+              <LoadingSkeleton width="100%" height="40px"></LoadingSkeleton>
+            </h1>
+            <div className="genres-list flex gap-x-5">
+              <LoadingSkeleton
+                width="60px"
+                height="40px"
+                className="py-2 px-4 border rounded"
+              ></LoadingSkeleton>
+              <LoadingSkeleton
+                width="60px"
+                height="40px"
+                className="py-2 px-4 border rounded"
+              ></LoadingSkeleton>
+              <LoadingSkeleton
+                width="60px"
+                height="40px"
+                className="py-2 px-4 border rounded"
+              ></LoadingSkeleton>
+              <LoadingSkeleton
+                width="60px"
+                height="40px"
+                className="py-2 px-4 border rounded"
+              ></LoadingSkeleton>
+              <LoadingSkeleton
+                width="60px"
+                height="40px"
+                className="py-2 px-4 border rounded"
+              ></LoadingSkeleton>
+            </div>
+            <p className="leading-relaxed mx-auto mt-5">
+              <LoadingSkeleton
+                height="100px"
+                width="100%"
+                className="rounded-lg"
+              ></LoadingSkeleton>
+            </p>
+            <button className="mt-5 rounded-lg bg-[rgba(0,0,0,0.5)] text-white mx-auto">
+              <LoadingSkeleton
+                width="60px"
+                height="40px"
+                className="py-2 px-4 border rounded"
+              ></LoadingSkeleton>
+            </button>
+          </div>
+        </div>
+
+        {/* credits */}
+        <div className="">
+          <h2 className="text-3xl font-medium mb-10">Casts</h2>
+          <div className="cast-list">
+            <Swiper
+              grabCursor={"true"}
+              spaceBetween={40}
+              slidesPerView={"auto"}
+            >
+              <SwiperSlide>
+                <LoadingSkeleton
+                  width="221px"
+                  height="270px"
+                  className="object-cover rounded-lg"
+                ></LoadingSkeleton>
+                <LoadingSkeleton height="28px" width="221px"></LoadingSkeleton>
+              </SwiperSlide>
+              <SwiperSlide>
+                <LoadingSkeleton
+                  width="221px"
+                  height="270px"
+                  className="object-cover rounded-lg"
+                ></LoadingSkeleton>
+                <LoadingSkeleton height="28px" width="221px"></LoadingSkeleton>
+              </SwiperSlide>
+              <SwiperSlide>
+                <LoadingSkeleton
+                  width="221px"
+                  height="270px"
+                  className="object-cover rounded-lg"
+                ></LoadingSkeleton>
+                <LoadingSkeleton height="28px" width="221px"></LoadingSkeleton>
+              </SwiperSlide>
+              <SwiperSlide>
+                <LoadingSkeleton
+                  width="221px"
+                  height="270px"
+                  className="object-cover rounded-lg"
+                ></LoadingSkeleton>
+                <LoadingSkeleton height="28px" width="221px"></LoadingSkeleton>
+              </SwiperSlide>
+              <SwiperSlide>
+                <LoadingSkeleton
+                  width="221px"
+                  height="270px"
+                  className="object-cover rounded-lg"
+                ></LoadingSkeleton>
+                <LoadingSkeleton height="28px" width="221px"></LoadingSkeleton>
+              </SwiperSlide>
+            </Swiper>
+          </div>
+        </div>
+
+        {/* videos */}
+        <div className="py-10">
+          <div className="flex flex-col gap-10">
+            <div className="">
+              <div className="flex justify-between">
+                <h2 className="text-3xl font-medium mb-10">Trailer</h2>
+                <LoadingSkeleton
+                  className="rounded-lg"
+                  width="100px"
+                  height="50px"
+                ></LoadingSkeleton>
+              </div>
+              <div className="w-full aspect-video">
+                <LoadingSkeleton height="720px" width="1280"></LoadingSkeleton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* similar */}
+        <div className="py-10">
+          <h2 className="text-3xl font-medium mb-10">Similar movies</h2>
+          <div className="movie-list">
+            <>
+              <Swiper
+                grabCursor={"true"}
+                spaceBetween={40}
+                slidesPerView={"auto"}
+              >
+                <SwiperSlide>
+                  <MovieCardSkeleton></MovieCardSkeleton>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <MovieCardSkeleton></MovieCardSkeleton>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <MovieCardSkeleton></MovieCardSkeleton>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <MovieCardSkeleton></MovieCardSkeleton>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <MovieCardSkeleton></MovieCardSkeleton>
+                </SwiperSlide>
+              </Swiper>
+            </>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function MovieCredits() {
   const { movieId } = useParams();
   const { data } = useSWR(tmdbAPI.getMovieMeta(movieId, "credits"), fetcher);
@@ -251,7 +427,6 @@ function MovieCredits() {
     </div>
   );
 }
-
 function MovieVideos() {
   const { movieId } = useParams();
   const { data } = useSWR(tmdbAPI.getMovieMeta(movieId, "videos"), fetcher);
@@ -284,7 +459,6 @@ function MovieVideos() {
     </div>
   );
 }
-
 function MovieSimilar() {
   const { movieId } = useParams();
   const { data } = useSWR(tmdbAPI.getMovieMeta(movieId, "similar"), fetcher);
@@ -308,4 +482,3 @@ function MovieSimilar() {
     </div>
   );
 }
-export default MovieDetailsPage;

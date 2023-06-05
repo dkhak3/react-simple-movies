@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "react-router-dom";
@@ -7,26 +7,61 @@ import Search from "../components/Search/Search";
 const navigation = [
   { name: "Home", href: "/", current: true },
   { name: "Movies", href: "/movies", current: false },
-  // { name: "Favourite", href: "/favourite", current: false },
-  // { name: "Calendar", href: "#", current: false },
 ];
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+function debounceFn(func, wait, immediate) {
+  let timeout;
+  return function () {
+    let context = this,
+      args = arguments;
+    let later = function () {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    let callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
+  };
+}
+
 export default function Home() {
+  // useEffect(() => {
+  //   window.addEventListener("scroll", debounceFn(isSticky, 100));
+  //   return () => {
+  //     window.removeEventListener("scroll", debounceFn(isSticky, 100));
+  //   };
+  // });
+
+  // const isSticky = (e) => {
+  //   const header = document.querySelector(".header-section");
+  //   const headerHeight = header && header.offsetHeight;
+  //   const scrollY = window.pageYOffset;
+
+  //   if (scrollY >= headerHeight) {
+  //     header && header.classList.add("is-fixed");
+  //     document.body.style.paddingTop = `${headerHeight}px`;
+  //   } else {
+  //     header.classList.remove("is-fixed");
+  //     document.body.style.paddingTop = 0;
+  //   }
+  // };
+
   const login = JSON.parse(localStorage.getItem("login"))
     ? JSON.parse(localStorage.getItem("login"))
     : "";
   return (
     <Disclosure
       as="nav"
-      className="bg-slate-900 page-container border-b border-slate-800 mb-10"
+      className="bg-slate-900 page-container border-b border-slate-800 mb-10 header-section"
     >
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 ">
             <div className="relative flex h-16 items-center justify-between">
               <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                 {/* Mobile menu button*/}

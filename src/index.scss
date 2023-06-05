@@ -116,3 +116,21 @@
 .fade-exit-active .tooltip {
   opacity: 0;
 }
+
+.header-section.is-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  animation: fade 0.25s forwards 1;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
