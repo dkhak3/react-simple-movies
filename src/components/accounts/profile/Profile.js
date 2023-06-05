@@ -147,22 +147,6 @@ function Profile() {
     setChangeEmail(true);
   };
 
-  const [imageCrop, setImageCrop] = useState(false);
-  const [image, setImage] = useState("");
-  const [src, setSrc] = useState(false);
-  const [profile, setProfile] = useState([]);
-  const [pview, setPview] = useState(false);
-  const profileFinal = profile.map((item) => item.pview);
-  const onClose = () => {
-    setPview(null);
-  };
-  const onCrop = (view) => {
-    setPview(view);
-  };
-  const saveCropImage = () => {
-    setProfile([...profile, { pview }]);
-    setImageCrop(false);
-  };
   return (
     <div className="min-h-screen block lg:grid lg:grid-cols-[300px,minmax(0,1fr),300px]">
       <div
@@ -266,53 +250,8 @@ function Profile() {
                     ? avatar
                     : "	https://png.pngtree.com/png-clipart/20191121/original/pngtree-user-icon-png-image_5097430.jpg"
                 }
-                // onClick={() => setImageCrop(true)}
-                // src={profileFinal.length ? profileFinal : avatar}
               />
-              {/* <Dialog
-                visible={imageCrop}
-                header={() => (
-                  <p htmlFor="" className="text-2xl font-semibold">
-                    Update Avatar
-                  </p>
-                )}
-                onHide={() => setImageCrop(false)}
-              >
-                <div className="confirmation-content flex flex-col items-center">
-                  <AvatarEditor
-                    width={500}
-                    height={400}
-                    onCrop={onCrop}
-                    onClose={onClose}
-                    src={src}
-                    shadingColor={"#474649"}
-                    backgroundColor={"#474649"}
-                  />
-                  <div className="flex flex-col items-center mt-5 w-12">
-                    <div className="flex justify-around w-12 mt-4">
-                      <Button
-                        onClick={saveCropImage}
-                        label="Save"
-                        icon="pi pi-checl"
-                      ></Button>
-                    </div>
-                  </div>
-                </div>
-              </Dialog> */}
             </div>
-            {/* <InputText
-              type="file"
-              accept="/image/*"
-              style={{ display: "none" }}
-              onChange={(e) => {
-                const file = e.target.files[0];
-                if (file && file.type.substring(0, 5) === "image") {
-                  setImage(file);
-                } else {
-                  setImage(null);
-                }
-              }}
-            ></InputText> */}
             <div className={cx("full-name")}>
               <h1 className="text-xl font-medium">
                 {account.first_name} {account.last_name}
