@@ -12,7 +12,7 @@ import Signup from "./components/accounts/signup/Signup";
 import SignIn from "./components/accounts/login/SignIn";
 import Profile from "./components/accounts/profile/Profile";
 import Favourite from "./components/accounts/profile/Favourite";
-import MoreMovie from "./components/movie/MoreMovie";
+// import MoreMovie from "./components/movie/MoreMovie";
 // import HomePage from "./pages/HomePage";
 // import MoviePage from "./pages/MoviePage";
 // import MovieDetailsPage from "./pages/MovieDetailsPage";
@@ -21,6 +21,7 @@ import MoreMovie from "./components/movie/MoreMovie";
 const HomePage = lazy(() => import("./pages/HomePage"));
 const MoviePage = lazy(() => import("./pages/MoviePage"));
 const MovieDetailsPage = lazy(() => import("./pages/MovieDetailsPage"));
+const MoreMovie = lazy(() => import("./components/movie/MoreMovie"));
 
 function App() {
   return (
