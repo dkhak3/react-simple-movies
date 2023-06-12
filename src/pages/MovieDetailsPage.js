@@ -15,7 +15,6 @@ const MovieDetailsPage = () => {
   const { movieId } = useParams();
   const { data, error } = useSWR(tmdbAPI.getMovieById(movieId), fetcher);
   const isLoading = !data && !error;
-
   const itemRef = useRef();
 
   const showToastMessage = (type) => {
