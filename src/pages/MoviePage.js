@@ -35,18 +35,6 @@ const MoviePage = () => {
   const { data, error } = useSWR(url, fetcher);
   const isLoading = !data && !error;
 
-  const showToastMessage = (type) => {
-    if (type === 1) {
-      toast.success("Add to Favourite Success !", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-    } else if (type === 2) {
-      toast.error("Add to Favourite failed !", {
-        position: toast.POSITION.TOP_RIGHT,
-      });
-    }
-  };
-
   useEffect(() => {
     if (filterDebounce) {
       setUrl(tmdbAPI.getMovieSearch(filterDebounce, nextPage));
@@ -196,13 +184,13 @@ const MoviePage = () => {
       <div className="mt-10">
         <ReactPaginate
           breakLabel="..."
-          nextLabel="next >"
+          nextLabel=">"
           onPageChange={handlePageClick}
           pageRangeDisplayed={3}
           pageCount={pageCount}
-          previousLabel="< previous"
+          previousLabel="<"
           renderOnZeroPageCount={null}
-          className="pagination"
+          className="pagination text-[10px] gap-x-0 md:text-lg lg:text-xl"
         />
       </div>
 
