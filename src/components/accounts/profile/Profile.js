@@ -51,7 +51,6 @@ function Profile() {
     address: address,
     city: city,
     email: email,
-    // sign_in: true,
   };
   const logout = {
     ...account,
@@ -91,6 +90,7 @@ function Profile() {
     localStorage.removeItem("login");
     showToastMessage(2);
     setTimeout(() => {
+      window.location.reload();
       window.location = routes.home;
     }, 1000);
   };
