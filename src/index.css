@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  body {
+    @apply bg-slate-900 font-body px-5 text-white;
+  }
+}
+@layer components {
+  .page-container {
+    max-width: 1280px;
+    @apply mx-auto;
+  }
+  .page-container2 {
+    max-width: 980px;
+  }
+  .movie-list .swiper-slide {
+    width: 300px;
+    height: auto;
+  }
+  .cast-list .swiper-slide {
+    width: auto;
+    height: auto;
+  }
+  .genres-list .swiper-slide {
+    width: auto;
+    height: auto;
+  }
+  .type-list .swiper-slide {
+    width: auto;
+    height: auto;
+  }
+  .banner .swiper {
+    height: 100%;
+  }
+}
+.pagination {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  gap: 20px;
+}
+.pagination .selected {
+  @apply text-primary;
+}
+
+.skeleton {
+  background-color: #eee;
+  background-image: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+  background-size: 200% 100%;
+  animation: 1.5s shine linear infinite;
+}
+
+@keyframes shine {
+  to {
+    background-position-x: -200%;
+  }
+}
+.slick-arrow,
+.slick-prev {
+  display: none !important;
+}
+
+.button-effect:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: auto;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background-color: #fff;
+  opacity: 0.1;
+  z-index: -1;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.button-effect {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.bg-gradient-secondary {
+  background-image: linear-gradient(to right top, #fc6c8f, #ffb86c);
+}
+
+.bg-gradient-primary {
+  background-image: linear-gradient(to right top, #6a5af9, #d66efd);
+}
+
+.nav-item-edit-profile.active,
+.nav-item-change-pass-word.active {
+  border-bottom: 2px solid #7d6aff;
+  color: #fff;
+}
+
+.fade-enter .tooltip {
+  opacity: 0;
+}
+
+.fade-enter-active .tooltip {
+  opacity: 1;
+}
+
+.fade-exit .tooltip {
+  opacity: 1;
+}
+
+.fade-exit-active .tooltip {
+  opacity: 0;
+}
+
+.header-section.is-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 100;
+  animation: fade 0.25s forwards 1;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}/*# sourceMappingURL=index.css.map */
